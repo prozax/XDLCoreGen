@@ -5,6 +5,8 @@
 
 class QuarterSlicel {
 private:
+    static int slicel_count = 0;
+
     std::string _name;
 
     std::string _5FFINIT;

@@ -10,10 +10,10 @@ private:
     std::string _PRECYINIT;
     std::string _SRUSEDMUX;
     std::string _SYNC_ATTR;
-    QuarterSlicel* _a;
-    QuarterSlicel* _b;
-    QuarterSlicel* _c;
-    QuarterSlicel* _d;
+    QuarterSlicel _a;
+    QuarterSlicel _b;
+    QuarterSlicel _c;
+    QuarterSlicel _d;
 
 public:
     Slicel(const std::string &_name);
