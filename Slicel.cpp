@@ -1,6 +1,9 @@
 #include "Slicel.h"
 
+int Slicel::slicel_count = 0;
+
 Slicel::Slicel(const std::string &_name): _name(_name), _a("A"), _b("B"), _c("C"), _d("D"){
+
     _PRECYINIT = "#OFF";
     _SRUSEDMUX = "#OFF";
     _SYNC_ATTR = "#OFF";

@@ -2,27 +2,13 @@
 #define XDLCOREGEN_QUARTERSLICEL_H
 
 #include <string>
+#include <map>
 
 class QuarterSlicel {
 private:
-    static int slicel_count = 0;
-
     std::string _name;
 
-    std::string _5FFINIT;
-    std::string _5FFMUX;
-    std::string _5FFSR;
-    std::string _5LUT;
-    std::string _5LUTNAME;
-    std::string _6LUT;
-    std::string _6LUTNAME;
-    std::string _CY0;
-    std::string _FF;
-    std::string _FFINIT;
-    std::string _FFMUX;
-    std::string _FFSR;
-    std::string _OUTMUX;
-    std::string _USED;
+    std::map<std::string, std::string> _attributes;
 
 public:
     QuarterSlicel(const std::string &_name);
@@ -64,6 +50,10 @@ public:
     void set_OUTMUX(const std::string &_OUTMUX);
     const std::string & get_USED() const;
     void set_USED(const std::string &_USED);
+
+    void set_attribute(const std::string &attr, const std::string &val);
+
+    std::string get_attribute(const std::string &attr);
 };
 
 

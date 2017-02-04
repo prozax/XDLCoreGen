@@ -6,6 +6,7 @@
 
 class Slicel {
 private:
+    static int slicel_count;
     std::string _name;
     std::string _PRECYINIT;
     std::string _SRUSEDMUX;
@@ -20,6 +21,5 @@ public:
 
     const std::string to_string() const;
 };
-
 
 #endif //XDLGEN_SLICEL_H
