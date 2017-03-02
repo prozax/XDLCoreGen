@@ -1,11 +1,12 @@
 #include "QuarterSlicel.h"
 
 const std::string QuarterSlicel::to_string() const {
+    // TODO: make dynamic
     return _name + "5FFINIT::" +  _attributes.at("5FFINIT") + " " +
            _name + "5FFMUX::" + _attributes.at("5FFMUX") + " " +
            _name + "5FFSR::" + _attributes.at("5FFSR") + " " +
-           _name + "5LUT:" + _attributes.at("5LUTNAME") + ":" + _attributes.at("5LUT") + " " +
-           _name + "6LUT:" + _attributes.at("6LUTNAME") + ":" + _attributes.at("6LUT") + " " +
+           _name + "5LUT:" + _attributes.at("5LUTNAME") + ":LUT:" + _attributes.at("5LUT") + " " +
+           _name + "6LUT:" + _attributes.at("6LUTNAME") + ":LUT:" + _attributes.at("6LUT") + " " +
            _name + "CY0::" + _attributes.at("CY0") + "\n       " +
            _name + "FF::" + _attributes.at("FF") + " " +
            _name + "FFINIT::" + _attributes.at("FFINIT") + " " +
@@ -63,7 +64,7 @@ void QuarterSlicel::set_name(const std::string &_name) {
 }
 
 
-void QuarterSlicel::set_attribute(const std::string &attr, const std::string &val) {
+void QuarterSlicel::set_attribute(const std::string attr, const std::string val) {
     if(_attributes.find(attr) != _attributes.end()) {
         _attributes[attr] = val;
     }

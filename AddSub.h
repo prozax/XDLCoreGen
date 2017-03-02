@@ -1,18 +1,17 @@
 #ifndef XDLCOREGEN_ADDSUB_H
 #define XDLCOREGEN_ADDSUB_H
 
+#include <string>
+#include "Module.h"
 
-#include <vector>
-#include "Slice.h"
-
-class AddSub {
+class AddSub: public Module {
 private:
-    std::vector<Slice> slices;
 
 public:
     AddSub(int bit_count);
 
     //AddSub();
+
 };
 
 
