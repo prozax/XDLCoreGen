@@ -5,12 +5,16 @@ AddSub::AddSub(int bit_count) {
     int slice_count = (int)ceil((float)bit_count / 4.0f);
     int bits_remaining = bit_count;
 
+    _name = "AddSub";
+    _inst_name = "AddSub<7>";
+
     for(int i = 0; i < slice_count; i++) {
 
         _slices.push_back(Slicel("AddSub<" + std::to_string(i) + ">"));
 
         if(i == 0) {
             _slices.back().set_attribute("PRECYINIT", "0");
+            add_port("AddSub<" + std::to_string(i) + ">ci", _slices.back(), "CIN");
         }
         else {
             add_interconnect("AddSub<" + std::to_string(i-1) + ">")
@@ -18,13 +22,21 @@ AddSub::AddSub(int bit_count) {
                     ->add_inpin("AddSub<" + std::to_string(i-1) + ">", "CIN");
         }
 
+        add_port("AddSub<" + std::to_string(i) + ">a", _slices.back(), "A");
+        add_port("AddSub<" + std::to_string(i) + ">b", _slices.back(), "B");
+        add_port("AddSub<" + std::to_string(i) + ">c", _slices.back(), "C");
+        add_port("AddSub<" + std::to_string(i) + ">d", _slices.back(), "D");
+        add_port("AddSub<" + std::to_string(i) + ">i1", _slices.back(), "A5");
+        add_port("AddSub<" + std::to_string(i) + ">i2", _slices.back(), "A6");
+
+
         _slices.back().set_attribute("AUSED", "0");
-        _slices.back().set_attribute("AUSED", "0");
+        _slices.back().set_attribute("BUSED", "0");
         _slices.back().set_attribute("CUSED", "0");
         _slices.back().set_attribute("DUSED", "0");
 
         _slices.back().set_attribute("ACY0", "O5");
-        _slices.back().set_attribute("ABY0", "O5");
+        _slices.back().set_attribute("BXY0", "O5");
         _slices.back().set_attribute("CCY0", "O5");
         _slices.back().set_attribute("DCY0", "O5");
 
@@ -55,4 +67,6 @@ AddSub::AddSub(int bit_count) {
 
         //tmp.set_attribute("", "");
     }
+
+    add_port("AddSub<" + std::to_string(slice_count-1) + ">co", _slices.back(), "COUT");
 }

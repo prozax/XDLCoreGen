@@ -8,9 +8,6 @@
 class Slicel: public Slice {
 private:
     static int slicel_count;
-    std::string _name;
-public:
-    const std::string &get_name() const;
 
 private:
     std::string _PRECYINIT;

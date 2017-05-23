@@ -4,16 +4,16 @@ const std::string QuarterSlicel::to_string() const {
     // TODO: make dynamic
     return _name + "5FFINIT::" +  _attributes.at("5FFINIT") + " " +
            _name + "5FFMUX::" + _attributes.at("5FFMUX") + " " +
-           _name + "5FFSR::" + _attributes.at("5FFSR") + " " +
-           _name + "5LUT:" + _attributes.at("5LUTNAME") + ":LUT:" + _attributes.at("5LUT") + " " +
-           _name + "6LUT:" + _attributes.at("6LUTNAME") + ":LUT:" + _attributes.at("6LUT") + " " +
-           _name + "CY0::" + _attributes.at("CY0") + "\n       " +
+           _name + "5FFSR::" + _attributes.at("5FFSR") + "\n       " +
+           _name + "5LUT:" + _attributes.at("5LUTNAME") + ":#LUT:O5=" + _attributes.at("5LUT") + "\n       " +
+           _name + "6LUT:" + _attributes.at("6LUTNAME") + ":#LUT:O6=" + _attributes.at("6LUT") + "\n       " +
+           _name + "CY0::" + _attributes.at("CY0") + " " +
            _name + "FF::" + _attributes.at("FF") + " " +
            _name + "FFINIT::" + _attributes.at("FFINIT") + " " +
            _name + "FFMUX::" + _attributes.at("FFMUX") + " " +
            _name + "FFSR::" + _attributes.at("FFSR") + " " +
            _name + "OUTMUX::" + _attributes.at("OUTMUX") + " " +
-           _name + "USED::" + _attributes.at("USED") + " \n";
+           _name + "USED::" + _attributes.at("USED") + "\n       ";
 }
 
 QuarterSlicel::QuarterSlicel(const std::string &_name): _name(_name) {

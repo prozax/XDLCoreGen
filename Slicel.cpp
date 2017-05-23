@@ -2,8 +2,7 @@
 
 int Slicel::slicel_count = 0;
 
-Slicel::Slicel(const std::string &_name): _name(_name), _a("A"), _b("B"), _c("C"), _d("D"){
-
+Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"), _d("D"){
     //_PRECYINIT = "#OFF";
     //_SRUSEDMUX = "#OFF";
     //_SYNC_ATTR = "#OFF";
@@ -15,10 +14,10 @@ Slicel::Slicel(const std::string &_name): _name(_name), _a("A"), _b("B"), _c("C"
 const std::string Slicel::to_string() const {
     return "inst \"" + _name + "\" \"SLICEL\", unplaced,\n" +
            "  cfg \" " +
-           _a.to_string() + "       " +
-           _b.to_string() + "       " +
-           _c.to_string() + "       " +
-           _d.to_string() + "       " +
+           _a.to_string() +
+           _b.to_string() +
+           _c.to_string() +
+           _d.to_string() +
            "PRECYINIT::" + _attributes.at("PRECYINIT") + " " +
            "SRUSEDMUX::" + _attributes.at("SRUSEDMUX") + " " +
            "SYNC_ATTR::" + _attributes.at("SYNC_ATTR") + " \";";
@@ -46,10 +45,6 @@ void Slicel::set_attribute(std::string attr, std::string val) {
                 break;
         }
     }
-}
-
-const std::string &Slicel::get_name() const {
-    return _name;
 }
 
 
