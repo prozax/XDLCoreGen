@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include "Slicel.h"
 #include "AddSub.h"
@@ -13,6 +14,10 @@ int main() {
     test_design.add_module(test_addsub);
     //cout << test_slicel.to_string() << endl;
     //cout << "\n AddSub:\n" << endl << test_addsub.to_string();
-    cout<<test_design.to_string();
+    ofstream outfile;
+    outfile.open("C:\\Users\\prozac\\xdl\\test.xdl");
+    outfile<<test_design.to_string();
+    outfile.close();
+    //cout<<test_design.to_string();
     return 0;
 }
