@@ -4,6 +4,7 @@
 
 
 #include "Slice.h"
+#include <iostream>
 
 class Port {
 protected:
@@ -13,7 +14,6 @@ protected:
 
 public:
     Port(std::string, Slice&, std::string);
-
     friend std::ostream& operator<<(std::ostream& os, Port const& rhs);
 };
 

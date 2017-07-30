@@ -21,6 +21,7 @@ protected:
     std::vector<Port> _ports;
 
 public:
+    std::deque<Slicel> &get_slices();
     Net* add_interconnect(std::string);
     Net* get_interconnect(std::string);
     void add_port(std::string, Slice&, std::string);

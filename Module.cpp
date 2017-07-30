@@ -12,7 +12,7 @@ const std::string Module::to_string() const {
     ret << std::endl;
 
     for(auto i: _slices) {
-        ret << i.to_string() << std::endl;
+        ret << i << std::endl;
     }
 
     ret << get_net();
@@ -46,4 +46,8 @@ Net* Module::get_interconnect(std::string name) {
 
 void Module::add_port(std::string portname, Slice& slice, std::string slice_port) {
     _ports.push_back(Port(portname, slice, slice_port));
+}
+
+std::deque<Slicel> &Module::get_slices() {
+    return _slices;
 }

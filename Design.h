@@ -6,21 +6,24 @@
 #include <iostream>
 #include <map>
 #include "Module.h"
+#include "Device.h"
 
 class Design {
 protected:
     std::string _name;
-    std::string _device;
+    Device _device;
     std::time_t _timestamp;
     std::string _ncd_version;
     std::multimap<std::string, std::string> _design_properties;
     std::vector<Module> _modules;
 
 public:
-    Design(const std::string&, const std::string&);
+    Design(const std::string&, Device&);
 
     void add_module(Module);
     const std::string to_string() const;
+    friend std::ostream& operator<<(std::ostream& os, Design const& rhs);
+    void place();
 };
 
 

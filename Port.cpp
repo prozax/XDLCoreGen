@@ -5,8 +5,8 @@ Port::Port(std::string _portname, Slice & _slice, std::string _slice_port): _por
 }
 
 std::ostream &operator<<(std::ostream &os, Port const &rhs) {
-    os << std::string("port \"") << rhs._portname << std::string("\" \"");
-    os << rhs._slice.get_name() << std::string("\" \"");
-    os << rhs._slice_port << std::string("\";");
+    os << "port \"" << rhs._portname << "\" \"";
+    os << rhs._slice.get_name() << "\" \"";
+    os << rhs._slice_port << "\";";
     return os;
 }

@@ -1,5 +1,4 @@
 
-#include <sstream>
 #include "Net.h"
 
 Net* Net::set_outpin(std::string instance, std::string pin) {

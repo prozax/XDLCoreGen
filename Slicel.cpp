@@ -11,16 +11,24 @@ Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"
     _attributes.insert(std::make_pair("SYNC_ATTR", "#OFF"));
 }
 
-const std::string Slicel::to_string() const {
-    return "inst \"" + _name + "\" \"SLICEL\", unplaced,\n" +
-           "  cfg \" " +
-           _a.to_string() +
-           _b.to_string() +
-           _c.to_string() +
-           _d.to_string() +
-           "PRECYINIT::" + _attributes.at("PRECYINIT") + " " +
-           "SRUSEDMUX::" + _attributes.at("SRUSEDMUX") + " " +
-           "SYNC_ATTR::" + _attributes.at("SYNC_ATTR") + " \";";
+std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
+    os << "port \"" << rhs._name << "\" \"SLICEL\", ";
+
+    if(rhs.isPlaced())
+        os << "placed " << rhs._primitive_site->get_parent()->get_name() << " " << rhs._primitive_site->get_name() << ",\n";
+    else
+        os << "unplaced ,\n";
+
+    os << "  cfg \" ";
+    os << rhs._a.to_string();
+    os << rhs._b.to_string();
+    os << rhs._c.to_string();
+    os << rhs._d.to_string();
+    os << "PRECYINIT::" << rhs._attributes.at("PRECYINIT") << " ";
+    os << "SRUSEDMUX::" << rhs._attributes.at("SRUSEDMUX") << " ";
+    os << "SYNC_ATTR::" << rhs._attributes.at("SYNC_ATTR") << " \";";
+
+    return os;
 }
 
 void Slicel::set_attribute(std::string attr, std::string val) {
