@@ -5,15 +5,12 @@
 #include <regex>
 #include "Device.h"
 
-Device::Device() : _column_count(0), _row_count(0){
-    _name = "xc6vlx75tff484-3";
-    std::string path = "devices/xc6vlx75tff484-3.xdl";
+Device::Device(std::string _name, std::string path) : _column_count(0), _row_count(0), _name(_name), _report_file_path(path){
     std::ifstream df;
     std::string line;
     std::regex position_regex("X([0-9]+)Y([0-9]+)");
     std::smatch matches;
-    //std::smatch matches;
-    df.open(path);
+    df.open(_report_file_path);
 
     while (std::getline(df, line)) {
         if (line.at(0) != '#') {
@@ -24,17 +21,10 @@ Device::Device() : _column_count(0), _row_count(0){
 
 
             if (iss >> bracket >> row >> column >> name >> type >> primitive_site_count) {
-                //                if (type.compare("CLBLM") == 0) {
-                //                    clblm.insert(std::make_pair(std::make_tuple(1, 2), name));
-                //                } else if (type.compare("CLBLL") == 0) {
-                //                    clbll.insert(std::make_pair(std::make_tuple(3, 2), name));
-                //                }
-                //std::cout << name << " - " << row << " - " << column << std::endl;
                 if (std::regex_search(name, matches, position_regex)) {
-                    int y = std::stoi(matches[1]);
-                    int x = std::stoi(matches[2]);
-//                    std::cout << name << " - " << row << " - " << column << " - x" << x << "y" << y << std::endl;
-                    Tile *new_tile = new Tile(name, type, row, column, x, y);
+                    int y_tile = std::stoi(matches[1]);
+                    int x_tile = std::stoi(matches[2]);
+                    Tile *new_tile = new Tile(name, type, row, column, x_tile, y_tile);
 
 
                     if(_row_count < row) _row_count = row;
@@ -45,11 +35,9 @@ Device::Device() : _column_count(0), _row_count(0){
                             std::istringstream iss(line);
                             if (iss >> bracket >> name >> type >> tmp >> tmp2 &&
                                 std::regex_search(name, matches, position_regex)) {
-                                int y = std::stoi(matches[1]);
-                                int x = std::stoi(matches[2]);
-                                //matches.clear();
-                                //std::cout << name << " - x" << x << "y" << y << std::endl;
-                                new_tile->add_primitive_site(new PrimitiveSite(name, type, x, y, new_tile));
+                                int y_primitive = std::stoi(matches[1]);
+                                int x_primitive = std::stoi(matches[2]);
+                                new_tile->add_primitive_site(new PrimitiveSite(name, type, x_primitive, y_primitive, new_tile));
                             }
                         }
                     }
@@ -57,7 +45,6 @@ Device::Device() : _column_count(0), _row_count(0){
                     _tiles.insert(std::make_pair(std::tuple<int, int>(column, row), *new_tile));
                 }
             }
-                //std::cout << type << " - " << name << std::endl;
         }
     }
 
@@ -108,6 +95,5 @@ PrimitiveSite* Device::get_next_primitive() {
         }
     }
 
-    std::cout<<"No primitive site found.";
     return nullptr;
 }

@@ -14,13 +14,13 @@
 class Device {
 protected:
     std::string _name;
+    std::string _report_file_path;
     int _column_count;
     int _row_count;
-    //std::vector<Tile> _tiles;
     std::map<std::tuple<int, int>, Tile> _tiles;
 
 public:
-    Device();
+    Device(std::string, std::string);
     friend std::ostream& operator<<(std::ostream& os, Device const& rhs);
     const std::string &get_name() const;
     int get_column_count() const;

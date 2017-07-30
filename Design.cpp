@@ -55,5 +55,4 @@ void Design::place() {
             }
         }
     }
-    //_device.get_next_primitive()->get_name();
 }

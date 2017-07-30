@@ -1,6 +1,5 @@
 
 #include "Tile.h"
-//#include "PrimitiveSite.h"
 
 Tile::Tile(const std::string &_name, const std::string &_type, int _row, int _column, int _pos_x, int _pos_y) : _name(_name), _type(_type),
                                                                                         _row(_row), _column(_column),

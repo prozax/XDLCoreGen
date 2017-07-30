@@ -3,9 +3,6 @@
 int Slicel::slicel_count = 0;
 
 Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"), _d("D"){
-    //_PRECYINIT = "#OFF";
-    //_SRUSEDMUX = "#OFF";
-    //_SYNC_ATTR = "#OFF";
     _attributes.insert(std::make_pair("PRECYINIT", "#OFF"));
     _attributes.insert(std::make_pair("SRUSEDMUX", "#OFF"));
     _attributes.insert(std::make_pair("SYNC_ATTR", "#OFF"));

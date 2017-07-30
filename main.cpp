@@ -6,7 +6,7 @@ using namespace std;
 
 int main() {
     //Slicel test_slicel = Slicel("TEST");
-    Device d = Device();
+    Device d = Device("xc6vlx75tff484-3", "./devices/xc6vlx75tff484-3.xdl");
     //cout<<d;
     AddSub test_addsub = AddSub(32);
     Design test_design = Design("testdesign", d);
