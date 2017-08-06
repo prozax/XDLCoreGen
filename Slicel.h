@@ -9,7 +9,7 @@
 
 class Slicel: public Slice {
 private:
-    static int slicel_count;
+    static int _slicel_count;
 
     std::string _PRECYINIT;
     std::string _SRUSEDMUX;

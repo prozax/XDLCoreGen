@@ -27,6 +27,10 @@ public:
     void add_port(std::string, Slice&, std::string);
     const std::string to_string() const;
     const std::string get_net() const;
+
+    void add_ground_connection(const std::string instance_name, const std::string pin_name);
+
+    void add_vcc_connection(const std::string instance_name, const std::string pin_name);
 };
 
 

@@ -1,15 +1,17 @@
 #include "Slicel.h"
 
-int Slicel::slicel_count = 0;
+int Slicel::_slicel_count = 0;
 
 Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"), _d("D"){
     _attributes.insert(std::make_pair("PRECYINIT", "#OFF"));
     _attributes.insert(std::make_pair("SRUSEDMUX", "#OFF"));
     _attributes.insert(std::make_pair("SYNC_ATTR", "#OFF"));
+
+    _slicel_count++;
 }
 
 std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
-    os << "port \"" << rhs._name << "\" \"SLICEL\", ";
+    os << "inst \"" << rhs._name << "\" \"SLICEL\", ";
 
     if(rhs.isPlaced())
         os << "placed " << rhs._primitive_site->get_parent()->get_name() << " " << rhs._primitive_site->get_name() << ",\n";

@@ -6,7 +6,7 @@ AddSub::AddSub(int bit_count) {
     int bits_remaining = bit_count;
 
     _name = "AddSub_Module<1>";
-    _inst_name = "AddSub_Slicel<7>";
+    _inst_name = "AddSub_Slicel<" + std::to_string(slice_count-1) + ">";
 
     for(int i = 0; i < slice_count; i++) {
 
@@ -18,16 +18,16 @@ AddSub::AddSub(int bit_count) {
         }
         else {
             add_interconnect("AddSub_Slicel<" + std::to_string(i-1) + ">")
-                    ->set_outpin("AddSub_Slicel<" + std::to_string(i) + ">", "COUT")
+                    ->set_outpin(_slices.back().get_name(), "COUT")
                     ->add_inpin("AddSub_Slicel<" + std::to_string(i-1) + ">", "CIN");
         }
 
-        add_port("AddSub_Slicel<" + std::to_string(i) + ">a", _slices.back(), "A");
-        add_port("AddSub_Slicel<" + std::to_string(i) + ">b", _slices.back(), "B");
-        add_port("AddSub_Slicel<" + std::to_string(i) + ">c", _slices.back(), "C");
-        add_port("AddSub_Slicel<" + std::to_string(i) + ">d", _slices.back(), "D");
-        add_port("AddSub_Slicel<" + std::to_string(i) + ">i1", _slices.back(), "A5");
-        add_port("AddSub_Slicel<" + std::to_string(i) + ">i2", _slices.back(), "A6");
+        add_port(_slices.back().get_name() + "a", _slices.back(), "A");
+        add_port(_slices.back().get_name() + "b", _slices.back(), "B");
+        add_port(_slices.back().get_name() + "c", _slices.back(), "C");
+        add_port(_slices.back().get_name() + "d", _slices.back(), "D");
+        add_port(_slices.back().get_name() + "i1", _slices.back(), "A5");
+        add_port(_slices.back().get_name() + "i2", _slices.back(), "A6");
 
 
         _slices.back().set_attribute("AUSED", "0");

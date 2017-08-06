@@ -1,6 +1,10 @@
 
 #include "Net.h"
 
+Net::Net(const std::string &_name) : _name(_name), _type("") {}
+
+Net::Net(const std::string &_name, const std::string &_type) : _name(_name), _type(_type) {}
+
 Net* Net::set_outpin(std::string instance, std::string pin) {
     _outpin.clear();
     _outpin.insert(std::make_pair(instance, pin));
@@ -26,6 +30,25 @@ const std::string Net::to_string() const {
     return ret.str();
 }
 
+std::ostream &operator<<(std::ostream &os, Net const &rhs) {
+     os << "net \"";
+     os << rhs._name << "\" " << rhs._type << "," << std::endl;
+
+    if(!rhs._outpin.empty()) {
+        os << "outpin \"";
+        os << rhs._outpin.begin()->first << "\" \"" << rhs._outpin.begin()->second << "\" ," << std::endl;
+    }
+
+    for(auto const& i: rhs._inpins) {
+        os << "inpin \"";
+        os << i.first << "\" \"" << i.second << "\" ," << std::endl;
+    }
+
+    os << ";" << std::endl;
+
+    return os;
+}
+
 bool Net::empty() {
-    return _outpin.empty() || _inpins.empty();
+    return _outpin.empty() && _inpins.empty();
 }

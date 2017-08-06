@@ -16,8 +16,7 @@ Device::Device(std::string _name, std::string path) : _column_count(0), _row_cou
         if (line.at(0) != '#') {
             std::istringstream iss(line);
             std::string bracket, tmp, tmp2, name, type;
-            char c;
-            int row, column, primitive_site_count, pin_count;
+            int row, column, primitive_site_count;
 
 
             if (iss >> bracket >> row >> column >> name >> type >> primitive_site_count) {

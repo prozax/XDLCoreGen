@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AddSub.h"
 #include "Design.h"
+#include "Multiplier.h"
 
 using namespace std;
 
@@ -9,8 +10,9 @@ int main() {
     Device d = Device("xc6vlx75tff484-3", "./devices/xc6vlx75tff484-3.xdl");
     //cout<<d;
     AddSub test_addsub = AddSub(32);
+    Multiplier test_multi = Multiplier(8, 8);
     Design test_design = Design("testdesign", d);
-    test_design.add_module(test_addsub);
+    test_design.add_module(test_multi);
     test_design.place();
 
 
