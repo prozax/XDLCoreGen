@@ -70,3 +70,7 @@ AddSub::AddSub(int bit_count) {
 
     add_port("AddSub_Slicel<" + std::to_string(slice_count-1) + ">co", _slices.back(), "COUT");
 }
+
+void AddSub::place(int x, int y, Device &device) {
+
+}

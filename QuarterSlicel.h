@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <sstream>
 
 class QuarterSlicel {
 private:
@@ -18,7 +19,7 @@ public:
                   const std::string &_FF, const std::string &_FFINIT, const std::string &_FFMUX,
                   const std::string &_FFSR, const std::string &_OUTMUX, const std::string &_USED);
 
-    const std::string to_string() const;
+    friend std::ostream& operator<<(std::ostream& os, QuarterSlicel const& rhs);
 
     const std::string & get_name() const;
     void set_name(const std::string &_name);

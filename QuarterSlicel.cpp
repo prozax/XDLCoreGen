@@ -1,19 +1,36 @@
 #include "QuarterSlicel.h"
 
-const std::string QuarterSlicel::to_string() const {
-    // TODO: make dynamic
-    return _name + "5FFINIT::" +  _attributes.at("5FFINIT") + " " +
-           _name + "5FFMUX::" + _attributes.at("5FFMUX") + " " +
-           _name + "5FFSR::" + _attributes.at("5FFSR") + "\n       " +
-           _name + "5LUT:" + _attributes.at("5LUTNAME") + ":#LUT:O5=" + _attributes.at("5LUT") + "\n       " +
-           _name + "6LUT:" + _attributes.at("6LUTNAME") + ":#LUT:O6=" + _attributes.at("6LUT") + "\n       " +
-           _name + "CY0::" + _attributes.at("CY0") + " " +
-           _name + "FF::" + _attributes.at("FF") + " " +
-           _name + "FFINIT::" + _attributes.at("FFINIT") + " " +
-           _name + "FFMUX::" + _attributes.at("FFMUX") + " " +
-           _name + "FFSR::" + _attributes.at("FFSR") + " " +
-           _name + "OUTMUX::" + _attributes.at("OUTMUX") + " " +
-           _name + "USED::" + _attributes.at("USED") + "\n       ";
+std::ostream &operator<<(std::ostream &os, QuarterSlicel const &rhs) {
+    os << rhs._name << "5FFINIT::" <<  rhs._attributes.at("5FFINIT") << " "
+       << rhs._name << "5FFMUX::" << rhs._attributes.at("5FFMUX") << " "
+       << rhs._name << "5FFSR::" << rhs._attributes.at("5FFSR") << std::endl << "       ";
+
+    if(rhs._attributes.at("5LUT") == "#OFF") {
+        os << rhs._name << "5LUT::#OFF" << std::endl << "       ";
+    }
+    else {
+        os << rhs._name << "5LUT:" << rhs._attributes.at("5LUTNAME") << ":#LUT:O5=" << rhs._attributes.at("5LUT")
+           << std::endl << "       ";
+    }
+
+    if(rhs._attributes.at("6LUT") == "#OFF") {
+        os << rhs._name << "6LUT::#OFF" << std::endl << "       ";
+    }
+    else {
+        os << rhs._name << "6LUT:" << rhs._attributes.at("6LUTNAME") << ":#LUT:O6=" << rhs._attributes.at("6LUT")
+           << std::endl << "       ";
+    }
+
+
+    os << rhs._name << "CY0::" << rhs._attributes.at("CY0") << " "
+       << rhs._name << "FF::" << rhs._attributes.at("FF") << " "
+       << rhs._name << "FFINIT::" << rhs._attributes.at("FFINIT") << " "
+       << rhs._name << "FFMUX::" << rhs._attributes.at("FFMUX") << " "
+       << rhs._name << "FFSR::" << rhs._attributes.at("FFSR") << " "
+       << rhs._name << "OUTMUX::" << rhs._attributes.at("OUTMUX") << " "
+       << rhs._name << "USED::" << rhs._attributes.at("USED") << std::endl << "       ";
+
+    return os;
 }
 
 QuarterSlicel::QuarterSlicel(const std::string &_name): _name(_name) {

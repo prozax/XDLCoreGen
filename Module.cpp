@@ -1,26 +1,33 @@
 #include "Module.h"
 
-const std::string Module::to_string() const {
-    std::ostringstream ret;
+std::ostream &operator<<(std::ostream &os, Module const &rhs) {
+    os << "module \"" << rhs._name << "\" \"" << rhs._inst_name << "\", cfg \"\"" << std::endl << ";" << std::endl;
 
-    ret << "module \"" << _name << "\" \"" << _inst_name << "\", cfg \"\";" << std::endl;
+//    for(auto i: rhs._ports) {
+//        os << i << std::endl;
+//    }
 
-    for(auto i: _ports) {
-        ret << i << std::endl;
+    os << std::endl;
+
+    for(auto p: rhs._pins) {
+        os << p.second << std::endl;
     }
 
-    ret << std::endl;
+    os << std::endl;
 
-    for(auto i: _slices) {
-        ret << i << std::endl;
+    for(auto i: rhs._slices) {
+        os << i << std::endl;
     }
 
-    ret << get_net();
+    os << std::endl;
 
-    ret << "endmodule \"" << _name << "\";" << std::endl;
+    os << rhs.get_net();
 
-    return ret.str();
+    os << "endmodule \"" << rhs._name << "\";" << std::endl;
+
+    return os;
 }
+
 
 const std::string Module::get_net() const {
     std::stringstream ret;
@@ -45,19 +52,19 @@ Net* Module::get_interconnect(std::string pin_name) {
 }
 
 void Module::add_ground_connection(const std::string instance_name, const std::string pin_name) {
-    if(_net.count(_name + "LOGIC0") == 0) {
-        _net.insert(std::make_pair(_name + "LOGIC0", Net(_name + "LOGIC0", "gnd")));
+    if(_net.count("GLOBAL_LOGIC0_" + _name) == 0) {
+        _net.insert(std::make_pair("GLOBAL_LOGIC0_" + _name, Net("GLOBAL_LOGIC0_" + _name, "gnd")));
     }
 
-    _net.at(_name + "LOGIC0").add_inpin(instance_name, pin_name);
+    _net.at("GLOBAL_LOGIC0_" + _name).add_inpin(instance_name, pin_name);
 }
 
 void Module::add_vcc_connection(const std::string instance_name, const std::string pin_name) {
-    if(_net.count(_name + "LOGIC1") == 0) {
-        _net.insert(std::make_pair(_name + "LOGIC1", Net(_name + "LOGIC1", "vcc")));
+    if(_net.count("GLOBAL_LOGIC1_" + _name) == 0) {
+        _net.insert(std::make_pair("GLOBAL_LOGIC1_" + _name, Net("GLOBAL_LOGIC1_" + _name, "vcc")));
     }
 
-    _net.at(_name + "LOGIC1").add_inpin(instance_name, pin_name);
+    _net.at("GLOBAL_LOGIC1_" + _name).add_inpin(instance_name, pin_name);
 }
 
 void Module::add_port(std::string portname, Slice& slice, std::string slice_port) {

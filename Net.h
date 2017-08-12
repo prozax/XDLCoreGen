@@ -23,7 +23,6 @@ protected:
 public:
     Net* set_outpin(std::string, std::string);
     Net* add_inpin(std::string, std::string);
-    const std::string to_string() const;
     friend std::ostream& operator<<(std::ostream& os, Net const& rhs);
     bool empty();
 };

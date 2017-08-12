@@ -16,32 +16,18 @@ Net* Net::add_inpin(std::string instance, std::string pin) {
     return this;
 }
 
-const std::string Net::to_string() const {
-    std::ostringstream ret;
-
-    ret << "outpin \"";
-    ret << _outpin.begin()->first << "\" \"" << _outpin.begin()->second << "\" ," << std::endl;
-
-    for(auto const& i: _inpins) {
-        ret << "inpin \"";
-        ret << i.first << "\" \"" << i.second << "\" ," << std::endl;
-    }
-
-    return ret.str();
-}
-
 std::ostream &operator<<(std::ostream &os, Net const &rhs) {
      os << "net \"";
      os << rhs._name << "\" " << rhs._type << "," << std::endl;
 
     if(!rhs._outpin.empty()) {
-        os << "outpin \"";
-        os << rhs._outpin.begin()->first << "\" \"" << rhs._outpin.begin()->second << "\" ," << std::endl;
+        os << "    " << "outpin \"";
+        os << rhs._outpin.begin()->first << "\" " << rhs._outpin.begin()->second << " ," << std::endl;
     }
 
     for(auto const& i: rhs._inpins) {
-        os << "inpin \"";
-        os << i.first << "\" \"" << i.second << "\" ," << std::endl;
+        os << "    " << "inpin \"";
+        os << i.first << "\" " << i.second << " ," << std::endl;
     }
 
     os << ";" << std::endl;

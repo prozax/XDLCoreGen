@@ -15,13 +15,12 @@ protected:
     std::time_t _timestamp;
     std::string _ncd_version;
     std::multimap<std::string, std::string> _design_properties;
-    std::vector<Module> _modules;
+    std::vector<Module*> _modules;
 
 public:
     Design(const std::string&, Device&);
 
-    void add_module(Module);
-    const std::string to_string() const;
+    void add_module(Module&);
     friend std::ostream& operator<<(std::ostream& os, Design const& rhs);
     void place();
 };

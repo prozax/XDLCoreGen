@@ -5,13 +5,15 @@
 #include <regex>
 #include "Device.h"
 
-Device::Device(std::string _name, std::string path) : _column_count(0), _row_count(0), _name(_name), _report_file_path(path){
+Device::Device(std::string _name, std::string path) : _column_count(0), _row_count(0), _slice_row_count(0),
+                                                      _slice_column_count(0), _name(_name), _report_file_path(path){
     std::ifstream df;
     std::string line;
     std::regex position_regex("X([0-9]+)Y([0-9]+)");
     std::smatch matches;
     df.open(_report_file_path);
 
+    // TODO: cleanup, read row/column counts and device name
     while (std::getline(df, line)) {
         if (line.at(0) != '#') {
             std::istringstream iss(line);
@@ -21,10 +23,9 @@ Device::Device(std::string _name, std::string path) : _column_count(0), _row_cou
 
             if (iss >> bracket >> row >> column >> name >> type >> primitive_site_count) {
                 if (std::regex_search(name, matches, position_regex)) {
-                    int y_tile = std::stoi(matches[1]);
-                    int x_tile = std::stoi(matches[2]);
+                    int x_tile = std::stoi(matches[1]);
+                    int y_tile = std::stoi(matches[2]);
                     Tile *new_tile = new Tile(name, type, row, column, x_tile, y_tile);
-
 
                     if(_row_count < row) _row_count = row;
                     if(_column_count < column) _column_count = column;
@@ -33,10 +34,19 @@ Device::Device(std::string _name, std::string path) : _column_count(0), _row_cou
                         if (std::getline(df, line)) {
                             std::istringstream iss(line);
                             if (iss >> bracket >> name >> type >> tmp >> tmp2 &&
-                                std::regex_search(name, matches, position_regex)) {
-                                int y_primitive = std::stoi(matches[1]);
-                                int x_primitive = std::stoi(matches[2]);
-                                new_tile->add_primitive_site(new PrimitiveSite(name, type, x_primitive, y_primitive, new_tile));
+                                    std::regex_search(name, matches, position_regex)) {
+                                int x_primitive = std::stoi(matches[1]);
+                                int y_primitive = std::stoi(matches[2]);
+
+                                PrimitiveSite *pm = new PrimitiveSite(name, type, x_primitive, y_primitive, new_tile);
+                                new_tile->add_primitive_site(pm);
+
+                                if(type == "SLICEL" || type == "SLICEM") {
+                                    if(_slice_column_count < x_primitive) _slice_column_count = x_primitive;
+                                    if(_slice_row_count < y_primitive) _slice_row_count = y_primitive;
+
+                                    _slices.insert(std::make_pair(std::tuple<int, int>(x_primitive, y_primitive), pm));
+                                }
                             }
                         }
                     }
@@ -47,7 +57,11 @@ Device::Device(std::string _name, std::string path) : _column_count(0), _row_cou
         }
     }
 
-
+    // adding one to the counts because the actual positions used above start at 0
+    if(_row_count > 0) _row_count++;
+    if(_column_count > 0) _column_count++;
+    if(_slice_row_count > 0) _slice_row_count++;
+    if(_slice_column_count > 0) _slice_column_count++;
 
     df.close();
 }
@@ -95,4 +109,20 @@ PrimitiveSite* Device::get_next_primitive() {
     }
 
     return nullptr;
+}
+
+PrimitiveSite* Device::get_slice(int x, int y) {
+    if(_slices.count(std::tuple<int, int>(x, y)) > 0) {
+        return _slices.at(std::tuple<int, int>(x, y));
+    }
+
+    return nullptr;
+}
+
+int Device::get_slice_row_count() const {
+    return _slice_row_count;
+}
+
+int Device::get_slice_column_count() const {
+    return _slice_column_count;
 }

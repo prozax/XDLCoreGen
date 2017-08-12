@@ -6,6 +6,7 @@ Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"
     _attributes.insert(std::make_pair("PRECYINIT", "#OFF"));
     _attributes.insert(std::make_pair("SRUSEDMUX", "#OFF"));
     _attributes.insert(std::make_pair("SYNC_ATTR", "#OFF"));
+    _attributes.insert(std::make_pair("COUTUSED", "#OFF"));
 
     _slicel_count++;
 }
@@ -13,19 +14,21 @@ Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"
 std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
     os << "inst \"" << rhs._name << "\" \"SLICEL\", ";
 
-    if(rhs.isPlaced())
-        os << "placed " << rhs._primitive_site->get_parent()->get_name() << " " << rhs._primitive_site->get_name() << ",\n";
+    if(rhs.is_placed())
+        os << "placed " << rhs._primitive_site->get_parent()->get_name() << " "
+           << rhs._primitive_site->get_name() << "," << std::endl;
     else
-        os << "unplaced ,\n";
+        os << "unplaced ," << std::endl;
 
     os << "  cfg \" ";
-    os << rhs._a.to_string();
-    os << rhs._b.to_string();
-    os << rhs._c.to_string();
-    os << rhs._d.to_string();
+    os << rhs._a;
+    os << rhs._b;
+    os << rhs._c;
+    os << rhs._d;
     os << "PRECYINIT::" << rhs._attributes.at("PRECYINIT") << " ";
     os << "SRUSEDMUX::" << rhs._attributes.at("SRUSEDMUX") << " ";
-    os << "SYNC_ATTR::" << rhs._attributes.at("SYNC_ATTR") << " \";";
+    os << "COUTUSED::" << rhs._attributes.at("COUTUSED") << " ";
+    os << "SYNC_ATTR::" << rhs._attributes.at("SYNC_ATTR") << " \"" << std::endl << ";";
 
     return os;
 }

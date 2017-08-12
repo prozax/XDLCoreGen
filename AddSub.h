@@ -10,6 +10,8 @@ private:
 public:
     AddSub(int bit_count);
 
+    void place(int x, int y, Device &device) override;
+
     //AddSub();
 
 };

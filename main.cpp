@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "AddSub.h"
 #include "Design.h"
 #include "Multiplier.h"
@@ -18,14 +19,14 @@ int main() {
 
     //cout << test_slicel.to_string() << endl;
     //cout << "\n AddSub:\n" << endl << test_addsub.to_string();
-    cout << test_design.to_string();
+    cout << test_design;
 
-    /*
+
     ofstream outfile;
     outfile.open("C:\\Users\\prozac\\xdl\\test.xdl");
     outfile<<test_design.to_string();
     outfile.close();
-     */
+
 
 
     return 0;
