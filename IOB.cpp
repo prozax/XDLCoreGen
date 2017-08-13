@@ -36,7 +36,10 @@ std::ostream &operator<<(std::ostream &os, IOB const &rhs) {
 
     int linebreak = 0;
     for(auto a: rhs._attributes){
-        if(a.first == "PAD" || a.first == "OUTBUF" || a.first == "INBUF") {
+        if(a.first == "PAD" && a.second != "#OFF"
+           || a.first == "OUTBUF"
+           || a.first == "INBUF") {
+
             if(!a.second.empty())
                 os << a.first << ":" << a.second << ": ";
         }

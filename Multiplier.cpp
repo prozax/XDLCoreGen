@@ -86,6 +86,8 @@ Multiplier::Multiplier(int a_size, int b_size) {
 }
 
 void Multiplier::create_row(int a_size, int b_size, int row) {
+    // LUT inputs: A1: t - A2: an - A3: an-1 - A4: bm-1 - A5: bm - A6: bm+1
+
     int slice_count = (b_size/4)+1;
 
     for(int i = 0; i < slice_count; i++) {

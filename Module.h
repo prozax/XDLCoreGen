@@ -29,7 +29,6 @@ public:
     Net* add_interconnect(std::string);
     Net* get_interconnect(std::string);
     void add_port(std::string, Slice&, std::string);
-    const std::string get_net() const;
     virtual void place(int x, int y, Device &device) = 0;
     friend std::ostream& operator<<(std::ostream& os, Module const& rhs);
 

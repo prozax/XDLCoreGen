@@ -21,16 +21,16 @@ void Design::add_module(Module &m) {
 
 std::ostream &operator<<(std::ostream &os, Design const &rhs) {
     os<<"design \"";
-    os<<_name;
+    os<<rhs._name;
     os<<"\" ";
-    os<<_device.get_name();
+    os<<rhs._device.get_name();
     os<<" ";
-    os<<_ncd_version;
+    os<<rhs._ncd_version;
     os<<","<<std::endl;
     os<<"cfg \"";
     os<<std::endl;
 
-    for(auto const& i: _design_properties) {
+    for(auto const& i: rhs._design_properties) {
         os << "_DESIGN_PROP::";
         os << i.first << ":" << i.second << std::endl;
     }
@@ -38,7 +38,7 @@ std::ostream &operator<<(std::ostream &os, Design const &rhs) {
     os<<"\";"<<std::endl<<std::endl;
 
 
-    for(auto i: _modules) {
+    for(auto i: rhs._modules) {
         os << *i << std::endl;
     }
 

@@ -23,8 +23,8 @@ int main() {
 
 
     ofstream outfile;
-    outfile.open("C:\\Users\\prozac\\xdl\\test.xdl");
-    outfile<<test_design.to_string();
+    outfile.open("C:\\test.xdl");
+    outfile << test_design;
     outfile.close();
 
 

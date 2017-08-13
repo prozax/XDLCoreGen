@@ -9,35 +9,27 @@ std::ostream &operator<<(std::ostream &os, Module const &rhs) {
 
     os << std::endl;
 
-    for(auto p: rhs._pins) {
+    for (auto p: rhs._pins) {
         os << p.second << std::endl;
     }
 
     os << std::endl;
 
-    for(auto i: rhs._slices) {
+    for (auto i: rhs._slices) {
         os << i << std::endl;
     }
 
     os << std::endl;
 
-    os << rhs.get_net();
+    for (auto i: rhs._net) {
+        os << i.second << std::endl;
+    }
 
     os << "endmodule \"" << rhs._name << "\";" << std::endl;
 
     return os;
 }
 
-
-const std::string Module::get_net() const {
-    std::stringstream ret;
-
-    for(auto i: _net) {
-        ret << i.second << std::endl;
-    }
-
-    return ret.str();
-}
 
 Net* Module::add_interconnect(const std::string name) {
     if(_net.count(name) == 0) {
