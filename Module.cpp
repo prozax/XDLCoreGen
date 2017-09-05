@@ -1,11 +1,11 @@
 #include "Module.h"
 
 std::ostream &operator<<(std::ostream &os, Module const &rhs) {
-    os << "module \"" << rhs._name << "\" \"" << rhs._inst_name << "\", cfg \"\"" << std::endl << ";" << std::endl;
+    os << "module \"" << rhs._name << "\" \"" << rhs._inst_name << "\", cfg \"_SYSTEM_MACRO::FALSE\"" << std::endl << ";" << std::endl;
 
-//    for(auto i: rhs._ports) {
-//        os << i << std::endl;
-//    }
+    for(auto i: rhs._ports) {
+        os << i << std::endl;
+    }
 
     os << std::endl;
 

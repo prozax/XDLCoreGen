@@ -5,38 +5,38 @@
 int Multiplier::_multiplier_count = 0;
 
 Multiplier::Multiplier(int a_size, int b_size) {
-    _name = "Multiplier<" + std::to_string(_multiplier_count) + ">";
+    _name = "Multiplier<" + std::to_string(_multiplier_count) + ">_HARD_MACRO";
     _row_count = a_size/2 + 1;
 
 
     // creating pins
-    for(int i = 0; i < a_size; i++) {
-        _pins.insert(std::make_pair("a" + std::to_string(i), IOB("a" + std::to_string(i))));
-        _pins.at("a" + std::to_string(i)).set_attribute("IUSED", "0");
-        _pins.at("a" + std::to_string(i)).set_attribute("INBUF", "input_a" + std::to_string(i));
-        _pins.at("a" + std::to_string(i)).set_attribute("IBUF_LOW_PWR", "TRUE");
-        _pins.at("a" + std::to_string(i)).set_attribute("PAD", "a" + std::to_string(i));
-
-        add_interconnect("input_a" + std::to_string(i))->set_outpin("a" + std::to_string(i), "I");
-    }
-
-    for(int i = 0; i < b_size; i++) {
-        _pins.insert(std::make_pair("b" + std::to_string(i), IOB("b" + std::to_string(i))));
-        _pins.at("b" + std::to_string(i)).set_attribute("IUSED", "0");
-        _pins.at("b" + std::to_string(i)).set_attribute("INBUF", "input_b" + std::to_string(i));
-        _pins.at("b" + std::to_string(i)).set_attribute("IBUF_LOW_PWR", "TRUE");
-        _pins.at("b" + std::to_string(i)).set_attribute("PAD", "b" + std::to_string(i));
-
-        add_interconnect("input_b" + std::to_string(i))->set_outpin("b" + std::to_string(i), "I");
-    }
-
-    for(int i = 0; i < (b_size + a_size + 4); i++) {
-        _pins.insert(std::make_pair("p" + std::to_string(i), IOB("p" + std::to_string(i))));
-        _pins.at("p" + std::to_string(i)).set_attribute("OUSED", "0");
-        _pins.at("p" + std::to_string(i)).set_attribute("OUTBUF", "output_p" + std::to_string(i));
-        _pins.at("p" + std::to_string(i)).set_attribute("PAD", "p" + std::to_string(i));
-        add_interconnect("output_p" + std::to_string(i))->add_inpin("p" + std::to_string(i), "O");
-    }
+//    for(int i = 0; i < a_size; i++) {
+//        _pins.insert(std::make_pair("a" + std::to_string(i), IOB("a" + std::to_string(i))));
+//        _pins.at("a" + std::to_string(i)).set_attribute("IUSED", "0");
+//        _pins.at("a" + std::to_string(i)).set_attribute("INBUF", "input_a" + std::to_string(i));
+//        _pins.at("a" + std::to_string(i)).set_attribute("IBUF_LOW_PWR", "TRUE");
+//        _pins.at("a" + std::to_string(i)).set_attribute("PAD", "a" + std::to_string(i));
+//
+//        add_interconnect("input_a" + std::to_string(i))->set_outpin("a" + std::to_string(i), "I");
+//    }
+//
+//    for(int i = 0; i < b_size; i++) {
+//        _pins.insert(std::make_pair("b" + std::to_string(i), IOB("b" + std::to_string(i))));
+//        _pins.at("b" + std::to_string(i)).set_attribute("IUSED", "0");
+//        _pins.at("b" + std::to_string(i)).set_attribute("INBUF", "input_b" + std::to_string(i));
+//        _pins.at("b" + std::to_string(i)).set_attribute("IBUF_LOW_PWR", "TRUE");
+//        _pins.at("b" + std::to_string(i)).set_attribute("PAD", "b" + std::to_string(i));
+//
+//        add_interconnect("input_b" + std::to_string(i))->set_outpin("b" + std::to_string(i), "I");
+//    }
+//
+//    for(int i = 0; i < (b_size + a_size + 4); i++) {
+//        _pins.insert(std::make_pair("p" + std::to_string(i), IOB("p" + std::to_string(i))));
+//        _pins.at("p" + std::to_string(i)).set_attribute("OUSED", "0");
+//        _pins.at("p" + std::to_string(i)).set_attribute("OUTBUF", "output_p" + std::to_string(i));
+//        _pins.at("p" + std::to_string(i)).set_attribute("PAD", "p" + std::to_string(i));
+//        add_interconnect("output_p" + std::to_string(i))->add_inpin("p" + std::to_string(i), "O");
+//    }
 
 
 
@@ -194,14 +194,14 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
             add_ground_connection(slice_name, "A3");
             add_ground_connection(slice_name, "B3");
 
-//            add_port("p" + std::to_string(row*2), _slices.back(), "BMUX");
-//            add_port("p" + std::to_string(row*2 + 1), _slices.back(), "CMUX");
-            add_interconnect("output_p" + std::to_string(row*2))->set_outpin(slice_name, "BMUX");
-            add_interconnect("output_p" + std::to_string(row*2 + 1))->set_outpin(slice_name, "CMUX");
+            add_port("p" + std::to_string(row*2), _slices.back(), "BMUX");
+            add_port("p" + std::to_string(row*2 + 1), _slices.back(), "CMUX");
+//            add_interconnect("output_p" + std::to_string(row*2))->set_outpin(slice_name, "BMUX");
+//            add_interconnect("output_p" + std::to_string(row*2 + 1))->set_outpin(slice_name, "CMUX");
 
             if(row == _row_count-1) {
-//                add_port("p" + std::to_string(row*2 + 2), _slices.back(), "DMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + 2))->set_outpin(slice_name, "DMUX");
+                add_port("p" + std::to_string(row*2 + 2), _slices.back(), "DMUX");
+//                add_interconnect("output_p" + std::to_string(row*2 + 2))->set_outpin(slice_name, "DMUX");
             }
         }
         else {
@@ -210,20 +210,20 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
                     ->add_inpin(slice_name, "CIN");
 
             if(row == _row_count-1) {
-//                add_port("p" + std::to_string(row*2 + i*4 - 1), _slices.back(), "AMUX");
-//                add_port("p" + std::to_string(row*2 + i*4), _slices.back(), "BMUX");
-//                add_port("p" + std::to_string(row*2 + i*4 + 1), _slices.back(), "CMUX");
-//                add_port("p" + std::to_string(row*2 + i*4 + 2), _slices.back(), "DMUX");
+                add_port("p" + std::to_string(row*2 + i*4 - 1), _slices.back(), "AMUX");
+                add_port("p" + std::to_string(row*2 + i*4), _slices.back(), "BMUX");
+                add_port("p" + std::to_string(row*2 + i*4 + 1), _slices.back(), "CMUX");
+                add_port("p" + std::to_string(row*2 + i*4 + 2), _slices.back(), "DMUX");
 
-                add_interconnect("output_p" + std::to_string(row*2 + i*4 - 1))->set_outpin(slice_name, "AMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + i*4))->set_outpin(slice_name, "BMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 1))->set_outpin(slice_name, "CMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 2))->set_outpin(slice_name, "DMUX");
+//                add_interconnect("output_p" + std::to_string(row*2 + i*4 - 1))->set_outpin(slice_name, "AMUX");
+//                add_interconnect("output_p" + std::to_string(row*2 + i*4))->set_outpin(slice_name, "BMUX");
+//                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 1))->set_outpin(slice_name, "CMUX");
+//                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 2))->set_outpin(slice_name, "DMUX");
 
 
                 if(i == (b_size/4)) {
-//                    add_port("p" + std::to_string(row*2 + i*4 + 3), _slices.back(), "COUT");
-                    add_interconnect("output_p" + std::to_string(row*2 + i*4 + 3))->set_outpin(slice_name, "COUT");
+                    add_port("p" + std::to_string(row*2 + i*4 + 3), _slices.back(), "COUT");
+//                    add_interconnect("output_p" + std::to_string(row*2 + i*4 + 3))->set_outpin(slice_name, "COUT");
                 }
             }
         }
