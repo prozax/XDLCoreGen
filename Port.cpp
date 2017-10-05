@@ -1,12 +1,12 @@
 
 #include "Port.h"
 
-Port::Port(std::string _portname, Slice & _slice, std::string _slice_port): _portname(_portname), _slice(_slice), _slice_port(_slice_port) {
+Port::Port(std::string _portname, std::string _slice_name, std::string _pin): _port_name(_portname), _pin(_slice_name, _pin) {
 }
 
 std::ostream &operator<<(std::ostream &os, Port const &rhs) {
-    os << "port \"" << rhs._portname << "\" \"";
-    os << rhs._slice.get_name() << "\" \"";
-    os << rhs._slice_port << "\";";
+    os << "port \"" << rhs._port_name << "\" \"";
+    os << rhs._pin.get_instance() << "\" \"";
+    os << rhs._pin.get_pin() << "\";";
     return os;
 }

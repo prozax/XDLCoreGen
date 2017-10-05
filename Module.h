@@ -28,6 +28,7 @@ public:
     std::deque<Slicel> &get_slices();
     Net* add_interconnect(std::string);
     Net* get_interconnect(std::string);
+    void add_port(std::string, std::string, std::string);
     void add_port(std::string, Slice&, std::string);
     virtual void place(int x, int y, Device &device) = 0;
     friend std::ostream& operator<<(std::ostream& os, Module const& rhs);

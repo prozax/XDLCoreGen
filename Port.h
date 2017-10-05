@@ -4,16 +4,17 @@
 
 
 #include "Slice.h"
+#include "Pin.h"
 #include <iostream>
 
 class Port {
 protected:
-    Slice& _slice;
-    std::string _portname;
-    std::string _slice_port;
+    //Slice& _slice;
+    std::string _port_name;
+    Pin _pin;
 
 public:
-    Port(std::string, Slice&, std::string);
+    Port(std::string, std::string, std::string);
     friend std::ostream& operator<<(std::ostream& os, Port const& rhs);
 };
 
