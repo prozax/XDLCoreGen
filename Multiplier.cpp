@@ -21,28 +21,33 @@ Multiplier::Multiplier(int a_size, int b_size) {
                 if(j > 0) {
                     add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 - 3) + ">")
                             ->set_outpin(previous_name, "AMUX")
-                            ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "C1");
+                            ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "C1")
+                            ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "CX");
 
 //                    if(j != (b_size/4)) {
                         add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 - 2) + ">")
                                 ->set_outpin(previous_name, "BMUX")
-                                ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "D1");
+                                ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "D1")
+                                ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "DX");
 //                    }
 
                     add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 - 1) + ">")
                             ->set_outpin(previous_name, "CMUX")
-                            ->add_inpin(current_name, "A1");
+                            ->add_inpin(current_name, "A1")
+                            ->add_inpin(current_name, "AX");
                 }
 
                 add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j*4) + ">")
                         ->set_outpin(previous_name, "DMUX")
-                        ->add_inpin(current_name, "B1");
+                        ->add_inpin(current_name, "B1")
+                        ->add_inpin(current_name, "BX");
 
                 if(j == (b_size/4)) {
                     add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 + 1) + ">")
                             // DMUX instead of COUT
                             ->set_outpin("carry_route" + std::to_string(i-1), "AMUX")
-                            ->add_inpin(current_name,  "C1");
+                            ->add_inpin(current_name,  "C1")
+                            ->add_inpin(current_name,  "CX");
                 }
             }
         }
@@ -128,14 +133,20 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
 
             // t inputs of the first row
             add_ground_connection(slice_name, "A1");
+            add_ground_connection(slice_name, "AX");
             add_ground_connection(slice_name, "B1");
+            add_ground_connection(slice_name, "BX");
 
             if(i == slice_count-1) {
                 add_vcc_connection(slice_name, "C1");
+                add_vcc_connection(slice_name, "CX");
             } else {
                 add_ground_connection(slice_name, "C1");
-                add_ground_connection(slice_name, "D1");
+                add_ground_connection(slice_name, "CX");
             }
+
+            add_ground_connection(slice_name, "D1");
+            add_ground_connection(slice_name, "DX");
         }
 
         if(row == _row_count-1) {
@@ -157,22 +168,24 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
             add_ground_connection(slice_name, "D2");
             add_ground_connection(slice_name, "D3");
             add_vcc_connection(slice_name, "D1");
+            add_vcc_connection(slice_name, "DX");
         }
 
 
         if(i == 0) {
             current_slice.set_attribute("PRECYINIT", "1");
 
+            add_ground_connection(slice_name, "AX");
             add_ground_connection(slice_name, "A1");
             add_ground_connection(slice_name, "A2");
             add_ground_connection(slice_name, "A3");
             add_ground_connection(slice_name, "B3");
 
-            add_interconnect("input_p" + std::to_string(row*2))->set_outpin(slice_name, "BMUX");
-            add_interconnect("input_p" + std::to_string(row*2 + 1))->set_outpin(slice_name, "CMUX");
+            add_interconnect("output_p" + std::to_string(row*2))->set_outpin(slice_name, "BMUX");
+            add_interconnect("output_p" + std::to_string(row*2 + 1))->set_outpin(slice_name, "CMUX");
 
             if(row == _row_count-1) {
-                add_interconnect("input_p" + std::to_string(row*2 + 2))->set_outpin(slice_name, "DMUX");
+                add_interconnect("output_p" + std::to_string(row*2 + 2))->set_outpin(slice_name, "DMUX");
             }
         }
         else {
@@ -181,10 +194,10 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
                     ->add_inpin(slice_name, "CIN");
 
             if(row == _row_count-1) {
-                add_interconnect("input_p" + std::to_string(row*2 + i*4 - 1))->set_outpin(slice_name, "AMUX");
-                add_interconnect("input_p" + std::to_string(row*2 + i*4))->set_outpin(slice_name, "BMUX");
-                add_interconnect("input_p" + std::to_string(row*2 + i*4 + 1))->set_outpin(slice_name, "CMUX");
-                add_interconnect("input_p" + std::to_string(row*2 + i*4 + 2))->set_outpin(slice_name, "DMUX");
+                add_interconnect("output_p" + std::to_string(row*2 + i*4 - 1))->set_outpin(slice_name, "AMUX");
+                add_interconnect("output_p" + std::to_string(row*2 + i*4))->set_outpin(slice_name, "BMUX");
+                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 1))->set_outpin(slice_name, "CMUX");
+                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 2))->set_outpin(slice_name, "DMUX");
 
 
                 if(i == (b_size/4)) {
@@ -193,7 +206,7 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
 //                            ->set_outpin(slice_name, "COUT")
 //                            ->add_inpin(cr_slice.get_name(), "CIN");
 
-                    add_interconnect("input_p" + std::to_string(row*2 + i*4 + 3))
+                    add_interconnect("output_p" + std::to_string(row*2 + i*4 + 3))
                             ->set_outpin("carry_route" + std::to_string(row), "AMUX");
                 }
             }
@@ -205,10 +218,10 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
         current_slice.set_attribute("DUSED", "#OFF");
         current_slice.set_attribute("COUTUSED", "0");
 
-//        _slices.back().set_attribute("ACY0", "O5");
-//        _slices.back().set_attribute("BXY0", "O5");
-//        _slices.back().set_attribute("CCY0", "O5");
-//        _slices.back().set_attribute("DCY0", "O5");
+        _slices.back().set_attribute("ACY0", "AX");
+        _slices.back().set_attribute("BCY0", "BX");
+        _slices.back().set_attribute("CCY0", "CX");
+        _slices.back().set_attribute("DCY0", "DX");
 
         current_slice.set_attribute("AOUTMUX", "XOR");
         current_slice.set_attribute("BOUTMUX", "XOR");
@@ -216,11 +229,14 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
         current_slice.set_attribute("DOUTMUX", "XOR");
 
         // booth en/dec
-        std::string a_lut = "((~A1*((~A2*(((~A3*A5)+(A3*(~A4*A5)))@A6))+(A2*((~A3*(A4@(A5@A6)))+(A3*(((~A4*A5)+A4)@~A6))))))+(A1*((~A2*((~A3*((A4*A5)@A6))+(A3*(A4@(A5@A6)))))+(A2*(((~A3*(~A4+(A4*A5)))+(A3*A5))@~A6)))))";
+//        std::string a_lut = "((~A1*((~A2*(((~A3*A5)+(A3*(~A4*A5)))@A6))+(A2*((~A3*(A4@(A5@A6)))+(A3*(((~A4*A5)+A4)@~A6))))))+(A1*((~A2*((~A3*((A4*A5)@A6))+(A3*(A4@(A5@A6)))))+(A2*(((~A3*(~A4+(A4*A5)))+(A3*A5))@~A6)))))";
+        std::string a_lut = "((~A3*((~A2*(((~A4*A6)+(A4*(~A5*A6)))@A1))+(A2*((~A4*(A5@(A6@A1)))+(A4*(((~A5*A6)+A5)@~A1))))))+(A3*((~A2*((~A4*((A5*A6)@A1))+(A4*(A5@(A6@A1)))))+(A2*(((~A4*(~A5+(A5*A6)))+(A4*A6))@~A1)))))";
         // not(compl) add configuration
-        std::string b_lut = "(((~A3*A5)+(A3*(~A4*A5)))@~A6)*(A2+~A2)*(A1+~A1)";
+//        std::string b_lut = "(((~A3*A5)+(A3*(~A4*A5)))@~A6)*(A2+~A2)*(A1+~A1)";
+        std::string b_lut = "(((~A4*A6)+(A4*(~A5*A6)))@~A1)*(A2+~A2)*(A3+~A3)";
         // simple adder
-        std::string c_lut = "A6*(A5+~A5)*(A4+~A4)*(A3+~A3)*(A2+~A2)*(A1+~A1)";
+//        std::string c_lut = "A6*(A5+~A5)*(A4+~A4)*(A3+~A3)*(A2+~A2)*(A1+~A1)";
+        std::string c_lut = "A1*(A5+~A5)*(A4+~A4)*(A3+~A3)*(A2+~A2)*(A6+~A6)";
 
         current_slice.set_attribute("A6LUT", a_lut);
         current_slice.set_attribute("A6LUTNAME", slice_name + "A6");
@@ -245,20 +261,35 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
     add_interconnect("carry_routing_slice_" + std::to_string(row))
             ->set_outpin(last_slice_name, "COUT")
             ->add_inpin(cr_slice.get_name(), "CIN");
+
+
+    if(row == 0) {
+        add_vcc_connection(cr_slice.get_name(), "AX");
+    }
+    else {
+        add_interconnect("t<" + std::to_string(row) + "," + std::to_string((slice_count-1)*4) + ">")
+                ->set_outpin(last_slice_name, "DMUX")
+                ->add_inpin(cr_slice.get_name(), "AX");
+    }
+
 }
 
 void Multiplier::add_input_ports() {
     for (auto n: _net) {
-        if(n.second.get_name().find("input_") != std::string::npos) {
+        if((n.second.get_name().find("input_") != std::string::npos)
+            || (n.second.get_name().find("output_") != std::string::npos)) {
+
+             size_t underscore_pos = n.second.get_name().find("_") + 1;
+
             if(!n.second.get_outpin().empty()) {
-                add_port(n.second.get_name().substr(6, std::string::npos),
+                add_port(n.second.get_name().substr(underscore_pos, std::string::npos),
                          n.second.get_outpin().get_instance(),
                          n.second.get_outpin().get_pin());
             }
             else {
                 if(!n.second.get_inpins().empty()) {
                     n.second.get_inpins().at(0);
-                    add_port(n.second.get_name().substr(6, std::string::npos),
+                    add_port(n.second.get_name().substr(underscore_pos, std::string::npos),
                              n.second.get_inpins().at(0).get_instance(),
                              n.second.get_inpins().at(0).get_pin());
                 }
@@ -271,6 +302,7 @@ Slicel &Multiplier::create_carry_route_slice(int row) {
     _slices.push_back(Slicel("carry_route" + std::to_string(row)));
     _slices.back().set_attribute("AOUTMUX", "XOR");
     _slices.back().set_attribute("A6LUT", "A1");
+    _slices.back().set_attribute("ACY0", "AX");
     add_ground_connection(_slices.back().get_name(), "A1");
     return _slices.back();
 }
