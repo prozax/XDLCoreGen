@@ -27,6 +27,15 @@ std::ostream &operator<<(std::ostream &os, Module const &rhs) {
 
     os << "endmodule \"" << rhs._name<< "_HARD_MACRO" << "\";" << std::endl;
 
+    os << std::endl;
+    os << "# =======================================================" << std::endl;
+    os << "# SUMMARY" << std::endl;
+    os << "# Number of Slices: " << std::to_string(rhs._slices.size()) << std::endl;
+    os << "# Number of Ports: " << std::to_string(rhs._ports.size()) << std::endl;
+    os << "# Number of Nets: " << std::to_string(rhs._net.size()) << std::endl;
+    os << "# =======================================================";
+
+
     return os;
 }
 

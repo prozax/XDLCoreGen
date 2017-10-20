@@ -8,13 +8,15 @@
 
 class Multiplier: public Module {
 protected:
-    //std::vector<Slicel> _slices;
     static int _multiplier_count;
     int _row_count;
+    int _a_size;
+    int _b_size;
+    bool _is_pipelined;
 
     void create_row(int a_size, int b_size, int row);
     void add_input_ports();
-    Slicel &create_carry_route_slice(int row);
+    Slicel &create_slice(int row, int column, int a_size);
 
 public:
     Multiplier(int, int);

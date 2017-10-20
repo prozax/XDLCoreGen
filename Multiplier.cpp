@@ -1,6 +1,7 @@
 
 #include "Multiplier.h"
 #include "Device.h"
+#include <math.h>
 
 int Multiplier::_multiplier_count = 0;
 
@@ -8,47 +9,19 @@ Multiplier::Multiplier(int a_size, int b_size) {
     _name = "Multiplier<" + std::to_string(_multiplier_count) + ">";
     _row_count = a_size/2 + 1;
 
+    int lut_count = a_size + 5;
+    std::string letter[] = {"A", "B", "C", "D"};
 
     // creating connections between slices
-    for(int i = 0; i < _row_count; i++) {
-        create_row(a_size, b_size, i);
+    for(int row = 0; row < _row_count; row++) {
+        create_row(a_size, b_size, row);
 
-        if(i > 0) {
-            for(int j = 0; j < (b_size/4)+1; j++) {
-                std::string current_name = _name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j) + ">";
-                std::string previous_name = _name + "Slicel<" + std::to_string(i-1) + "_" + std::to_string(j) + ">";
-
-                if(j > 0) {
-                    add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 - 3) + ">")
-                            ->set_outpin(previous_name, "AMUX")
-                            ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "C1")
-                            ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "CX");
-
-//                    if(j != (b_size/4)) {
-                        add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 - 2) + ">")
-                                ->set_outpin(previous_name, "BMUX")
-                                ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "D1")
-                                ->add_inpin(_name + "Slicel<" + std::to_string(i) + "_" + std::to_string(j-1) + ">", "DX");
-//                    }
-
-                    add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 - 1) + ">")
-                            ->set_outpin(previous_name, "CMUX")
-                            ->add_inpin(current_name, "A1")
-                            ->add_inpin(current_name, "AX");
-                }
-
-                add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j*4) + ">")
-                        ->set_outpin(previous_name, "DMUX")
-                        ->add_inpin(current_name, "B1")
-                        ->add_inpin(current_name, "BX");
-
-                if(j == (b_size/4)) {
-                    add_interconnect("t<" + std::to_string(i) + "," + std::to_string(j * 4 + 1) + ">")
-                            // DMUX instead of COUT
-                            ->set_outpin("carry_route" + std::to_string(i-1), "AMUX")
-                            ->add_inpin(current_name,  "C1")
-                            ->add_inpin(current_name,  "CX");
-                }
+        if(row > 0) {
+            for(int lut_pos = 3; lut_pos < lut_count; lut_pos++) {
+                    add_interconnect("t<" + std::to_string(row) + "," + std::to_string(lut_pos - 3) + ">")
+                            ->set_outpin(_name + "Slicel<" + std::to_string(row-1) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + "MUX")
+                            ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string((lut_pos-2)/4) + ">", letter[(lut_pos-2)%4] + "1")
+                            ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string((lut_pos-2)/4) + ">", letter[(lut_pos-2)%4] + "X");
             }
         }
     }
@@ -57,122 +30,90 @@ Multiplier::Multiplier(int a_size, int b_size) {
     // adding ports for inputs
     add_input_ports();
 
-
     _inst_name = _slices.front().get_name();
     _multiplier_count++;
-
-//    add_port("Multiplier_Slicel<" + std::to_string(slice_count-1) + ">co", _slices.back(), "COUT");
 }
 
 void Multiplier::create_row(int a_size, int b_size, int row) {
     // LUT inputs: A1: t - A2: an - A3: an-1 - A4: bm-1 - A5: bm - A6: bm+1
 
-    int slice_count = (b_size/4)+1;
+    std::string letter[] = {"A", "B", "C", "D"};
+    int slice_count = (int) ceil(((double)b_size + 5.0)/4.0);
+    int lut_count = a_size + 5;
+    bool is_last_row = row == _row_count-1;
 
-    for(int i = 0; i < slice_count; i++) {
-        std::string slice_name = _name + "Slicel<" + std::to_string(row) + "_" + std::to_string(i) + ">";
-        _slices.push_back(Slicel(slice_name));
-        Slicel &current_slice = _slices.back();
+    for(int column = 0; column < slice_count; column++) {
+        int luts_left = (a_size+5) - (column)*4;
+        std::string slice_name = _name + "Slicel<" + std::to_string(row) + "_" + std::to_string(column) + ">";
+        Slicel &current_slice = create_slice(row, column , a_size);
 
-        // connecting a inputs
-
-        int an = i * 4; // a input index at B LUT
-
-        if(an-2 >= 0 && an-2 < a_size) {
-            add_interconnect("input_a" + std::to_string(an-2))->add_inpin(slice_name, "A3");
-        }
-        if(an-1 >= 0 && an-1 < a_size) {
-            add_interconnect("input_a" + std::to_string(an-1))->add_inpin(slice_name, "A2");
-            add_interconnect("input_a" + std::to_string(an-1))->add_inpin(slice_name, "B3");
-        }
-        if(an >= 0 && an < a_size) {
-            add_interconnect("input_a" + std::to_string(an))->add_inpin(slice_name, "B2");
-            add_interconnect("input_a" + std::to_string(an))->add_inpin(slice_name, "C3");
-        }
-        if(an+1 >= 0 && an+1 < a_size) {
-            add_interconnect("input_a" + std::to_string(an+1))->add_inpin(slice_name, "C2");
-            add_interconnect("input_a" + std::to_string(an+1))->add_inpin(slice_name, "D3");
-        }
-        if(an+2 >= 0 && an+2 < a_size) {
-            add_interconnect("input_a" + std::to_string(an+2))->add_inpin(slice_name, "D2");
-        }
-
-
-
-        // connecting b inputs
+        // connecting a and b inputs
         int bm = row * 2;
 
-        if(bm-1 >= 0) {
-            add_interconnect("input_b" + std::to_string(bm-1))->add_inpin(slice_name, "A4");
-            add_interconnect("input_b" + std::to_string(bm-1))->add_inpin(slice_name, "B4");
-            add_interconnect("input_b" + std::to_string(bm-1))->add_inpin(slice_name, "C4");
-            add_interconnect("input_b" + std::to_string(bm-1))->add_inpin(slice_name, "D4");
-        }
+        for(int i = 0; i < 4; i++) {
+            int lut_pos = (column * 4) + i;
 
-        if(bm >= 0 && bm < b_size) {
-            add_interconnect("input_b" + std::to_string(bm))->add_inpin(slice_name, "A5");
-            add_interconnect("input_b" + std::to_string(bm))->add_inpin(slice_name, "B5");
-            add_interconnect("input_b" + std::to_string(bm))->add_inpin(slice_name, "C5");
-            add_interconnect("input_b" + std::to_string(bm))->add_inpin(slice_name, "D5");
-        }
-
-        if(bm+1 >= 0 && bm+1 < b_size) {
-            add_interconnect("input_b" + std::to_string(bm+1))->add_inpin(slice_name, "A6");
-            add_interconnect("input_b" + std::to_string(bm+1))->add_inpin(slice_name, "B6");
-            add_interconnect("input_b" + std::to_string(bm+1))->add_inpin(slice_name, "C6");
-            add_interconnect("input_b" + std::to_string(bm+1))->add_inpin(slice_name, "D6");
-        }
-
-
-        if(row == 0) {
-            // bm-1
-            add_ground_connection(slice_name, "A4");
-            add_ground_connection(slice_name, "B4");
-            add_ground_connection(slice_name, "C4");
-            add_ground_connection(slice_name, "D4");
-
-            // t inputs of the first row
-            add_ground_connection(slice_name, "A1");
-            add_ground_connection(slice_name, "AX");
-            add_ground_connection(slice_name, "B1");
-            add_ground_connection(slice_name, "BX");
-
-            if(i == slice_count-1) {
-                add_vcc_connection(slice_name, "C1");
-                add_vcc_connection(slice_name, "CX");
-            } else {
-                add_ground_connection(slice_name, "C1");
-                add_ground_connection(slice_name, "CX");
+            if(lut_pos-2 >= 0 && lut_pos-2 < a_size) {
+                add_interconnect("input_a" + std::to_string(lut_pos-2))->add_inpin(slice_name, letter[i] + "3");
+            }
+            if(lut_pos-1 >= 0 && lut_pos-1 < a_size) {
+                add_interconnect("input_a" + std::to_string(lut_pos-1))->add_inpin(slice_name, letter[i] + "2");
             }
 
-            add_ground_connection(slice_name, "D1");
-            add_ground_connection(slice_name, "DX");
+            // last 2 LUTs don't need b inputs
+            if(lut_pos < lut_count-2) {
+                // generate b inputs
+                for(int j = 0; j < 3; j++) {
+                    int b = bm + j - 1;
+                    if (b >= 0 && b < b_size) {
+                        add_interconnect("input_b" + std::to_string(b))->add_inpin(slice_name, letter[i] + std::to_string(4 + j));
+                    }
+                    else {
+                        add_ground_connection(slice_name, letter[i] + std::to_string(4 + j));
+                    }
+                }
+            }
+
+            // adding output ports
+            int output_pos = bm + lut_pos - 1;
+            if(lut_pos > 0 && (lut_pos <= 2 || (output_pos < (a_size+b_size) && is_last_row))) {
+                add_interconnect("output_p" + std::to_string(output_pos))->set_outpin(slice_name, letter[i] + "MUX");
+            }
         }
 
-        if(row == _row_count-1) {
-            // bm, bm+1
-            add_ground_connection(slice_name, "A5");
-            add_ground_connection(slice_name, "B5");
-            add_ground_connection(slice_name, "C5");
-            add_ground_connection(slice_name, "D5");
-            add_ground_connection(slice_name, "A6");
-            add_ground_connection(slice_name, "B6");
-            add_ground_connection(slice_name, "C6");
-            add_ground_connection(slice_name, "D6");
+        for (int i = 0; i < 4; i++) {
+            std::string lut_config;
+
+            if(luts_left - i == 4) {    // last A LUT
+                add_ground_connection(slice_name, letter[i] + "2"); // input a(n) in last A LUT
+                if(row == 0) {
+                    add_ground_connection(slice_name, letter[i] + "1");
+                    add_ground_connection(slice_name, letter[i] + "X");
+                }
+            }
+            else if(luts_left - i == 3) {   // B LUT
+                if(row == 0) {
+                    add_vcc_connection(slice_name, letter[i] + "1"); // input a(n) in last A LUT
+                    add_vcc_connection(slice_name, letter[i] + "X");
+                }
+            }
+            else if(luts_left - i == 2) {   // C LUT
+                add_vcc_connection(slice_name, letter[i] + "1");
+                add_vcc_connection(slice_name, letter[i] + "X");
+            }
+            else if(luts_left - i == 1) {   // C LUT for carry routing
+                add_ground_connection(slice_name, letter[i] + "1");
+                //add_ground_connection(slice_name, letter[i] + "X");
+            }
+            else if(luts_left - i > 0) {
+                if(row == 0) {
+                    add_ground_connection(slice_name, letter[i] + "1");
+                    add_ground_connection(slice_name, letter[i] + "X");
+                }
+            }
         }
 
-        if(i == slice_count-1) {
-            add_ground_connection(slice_name, "B2");
-            add_ground_connection(slice_name, "C2");
-            add_ground_connection(slice_name, "C3");
-            add_ground_connection(slice_name, "D2");
-            add_ground_connection(slice_name, "D3");
-            add_vcc_connection(slice_name, "D1");
-            add_vcc_connection(slice_name, "DX");
-        }
-
-
-        if(i == 0) {
+        if(column == 0) {
             current_slice.set_attribute("PRECYINIT", "1");
 
             add_ground_connection(slice_name, "AX");
@@ -180,98 +121,13 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
             add_ground_connection(slice_name, "A2");
             add_ground_connection(slice_name, "A3");
             add_ground_connection(slice_name, "B3");
-
-            add_interconnect("output_p" + std::to_string(row*2))->set_outpin(slice_name, "BMUX");
-            add_interconnect("output_p" + std::to_string(row*2 + 1))->set_outpin(slice_name, "CMUX");
-
-            if(row == _row_count-1) {
-                add_interconnect("output_p" + std::to_string(row*2 + 2))->set_outpin(slice_name, "DMUX");
-            }
         }
         else {
-            add_interconnect(_name + "carry<" + std::to_string(row) + "_" + std::to_string(i-1) + "to" +  std::to_string(i) + ">")
-                    ->set_outpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string(i-1) + ">", "COUT")
+            add_interconnect(_name + "carry<" + std::to_string(row) + "_" + std::to_string(column-1) + "to" +  std::to_string(column) + ">")
+                    ->set_outpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string(column-1) + ">", "COUT")
                     ->add_inpin(slice_name, "CIN");
-
-            if(row == _row_count-1) {
-                add_interconnect("output_p" + std::to_string(row*2 + i*4 - 1))->set_outpin(slice_name, "AMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + i*4))->set_outpin(slice_name, "BMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 1))->set_outpin(slice_name, "CMUX");
-                add_interconnect("output_p" + std::to_string(row*2 + i*4 + 2))->set_outpin(slice_name, "DMUX");
-
-
-                if(i == (b_size/4)) {
-//                    Slicel &cr_slice = create_carry_route_slice(row);
-//                    add_interconnect("carry_routing_slice_" + std::to_string(row))
-//                            ->set_outpin(slice_name, "COUT")
-//                            ->add_inpin(cr_slice.get_name(), "CIN");
-
-                    add_interconnect("output_p" + std::to_string(row*2 + i*4 + 3))
-                            ->set_outpin("carry_route" + std::to_string(row), "AMUX");
-                }
-            }
-        }
-
-        current_slice.set_attribute("AUSED", "#OFF");
-        current_slice.set_attribute("BUSED", "#OFF");
-        current_slice.set_attribute("CUSED", "#OFF");
-        current_slice.set_attribute("DUSED", "#OFF");
-        current_slice.set_attribute("COUTUSED", "0");
-
-        _slices.back().set_attribute("ACY0", "AX");
-        _slices.back().set_attribute("BCY0", "BX");
-        _slices.back().set_attribute("CCY0", "CX");
-        _slices.back().set_attribute("DCY0", "DX");
-
-        current_slice.set_attribute("AOUTMUX", "XOR");
-        current_slice.set_attribute("BOUTMUX", "XOR");
-        current_slice.set_attribute("COUTMUX", "XOR");
-        current_slice.set_attribute("DOUTMUX", "XOR");
-
-        // booth en/dec
-//        std::string a_lut = "((~A1*((~A2*(((~A3*A5)+(A3*(~A4*A5)))@A6))+(A2*((~A3*(A4@(A5@A6)))+(A3*(((~A4*A5)+A4)@~A6))))))+(A1*((~A2*((~A3*((A4*A5)@A6))+(A3*(A4@(A5@A6)))))+(A2*(((~A3*(~A4+(A4*A5)))+(A3*A5))@~A6)))))";
-        std::string a_lut = "((~A3*((~A2*(((~A4*A6)+(A4*(~A5*A6)))@A1))+(A2*((~A4*(A5@(A6@A1)))+(A4*(((~A5*A6)+A5)@~A1))))))+(A3*((~A2*((~A4*((A5*A6)@A1))+(A4*(A5@(A6@A1)))))+(A2*(((~A4*(~A5+(A5*A6)))+(A4*A6))@~A1)))))";
-        // not(compl) add configuration
-//        std::string b_lut = "(((~A3*A5)+(A3*(~A4*A5)))@~A6)*(A2+~A2)*(A1+~A1)";
-        std::string b_lut = "(((~A4*A6)+(A4*(~A5*A6)))@~A1)*(A2+~A2)*(A3+~A3)";
-        // simple adder
-//        std::string c_lut = "A6*(A5+~A5)*(A4+~A4)*(A3+~A3)*(A2+~A2)*(A1+~A1)";
-        std::string c_lut = "A1*(A5+~A5)*(A4+~A4)*(A3+~A3)*(A2+~A2)*(A6+~A6)";
-
-        current_slice.set_attribute("A6LUT", a_lut);
-        current_slice.set_attribute("A6LUTNAME", slice_name + "A6");
-
-        current_slice.set_attribute("B6LUT", a_lut);
-        current_slice.set_attribute("B6LUTNAME", slice_name + "B6");
-
-        current_slice.set_attribute("C6LUT", a_lut);
-        current_slice.set_attribute("C6LUTNAME", slice_name + "C6");
-
-        current_slice.set_attribute("D6LUT", a_lut);
-        current_slice.set_attribute("D6LUTNAME", slice_name + "D6");
-
-        if(i == (b_size/4)) {
-            current_slice.set_attribute("C6LUT", b_lut);
-            current_slice.set_attribute("D6LUT", c_lut);
         }
     }
-    std::string last_slice_name = _slices.back().get_name();
-
-    Slicel &cr_slice = create_carry_route_slice(row);
-    add_interconnect("carry_routing_slice_" + std::to_string(row))
-            ->set_outpin(last_slice_name, "COUT")
-            ->add_inpin(cr_slice.get_name(), "CIN");
-
-
-    if(row == 0) {
-        add_vcc_connection(cr_slice.get_name(), "AX");
-    }
-    else {
-        add_interconnect("t<" + std::to_string(row) + "," + std::to_string((slice_count-1)*4) + ">")
-                ->set_outpin(last_slice_name, "DMUX")
-                ->add_inpin(cr_slice.get_name(), "AX");
-    }
-
 }
 
 void Multiplier::add_input_ports() {
@@ -298,23 +154,58 @@ void Multiplier::add_input_ports() {
     }
 }
 
-Slicel &Multiplier::create_carry_route_slice(int row) {
-    _slices.push_back(Slicel("carry_route" + std::to_string(row)));
-    _slices.back().set_attribute("AOUTMUX", "XOR");
-    _slices.back().set_attribute("A6LUT", "A1");
-    _slices.back().set_attribute("ACY0", "AX");
-    add_ground_connection(_slices.back().get_name(), "A1");
-    return _slices.back();
-}
-
 void Multiplier::place(int x_pos, int y_pos, Device &device) {
     // the multiplier is rotated 90 degrees to fit the carry chain, so rows and columns are swapped
     for(int x = 0; x < _row_count; ++x) {
         for (int y = 0; y < _slices.size()/_row_count; ++y) {
-            int pos = x * (_slices.size()/_row_count) + y;
+            size_t pos = x * (_slices.size()/_row_count) + y;
             _slices.at(pos).set_primitive_site(device.get_slice(x + x_pos, y + y_pos));
             _slices.at(pos).set_placed(true);
         }
     }
+}
+
+Slicel &Multiplier::create_slice(int row, int column, int a_size) {
+    int luts_left = (a_size+5) - (column)*4;
+
+    std::string slice_name = _name + "Slicel<" + std::to_string(row) + "_" + std::to_string(column) + ">";
+    _slices.emplace_back(slice_name);
+    Slicel &current_slice = _slices.back();
+
+    // enable carry output if there will be more slices in this row
+    if(luts_left > 4) {
+        current_slice.set_attribute("COUTUSED", "0");
+    }
+
+
+    // booth en/dec
+    std::string a_lut = "((~A3*((~A2*(((~A4*A6)+(A4*(~A5*A6)))@A1))+(A2*((~A4*(A5@(A6@A1)))+(A4*(((~A5*A6)+A5)@~A1))))))+(A3*((~A2*((~A4*((A5*A6)@A1))+(A4*(A5@(A6@A1)))))+(A2*(((~A4*(~A5+(A5*A6)))+(A4*A6))@~A1)))))";
+    // not(compl) add configuration
+    std::string b_lut = "(((~A4*A6)+(A4*(~A5*A6)))@~A1)";
+    // simple adder
+    std::string c_lut = "A1";
+
+    std::string letter[] = {"A", "B", "C", "D"};
+
+    for (int i = 0; i < 4; i++) {
+        std::string lut_config = a_lut;
+
+        if(luts_left - i == 3) {
+            lut_config = b_lut;
+        }
+        else if(luts_left - i == 2 || luts_left - i == 1) {
+            lut_config = c_lut;
+        }
+
+
+        if(luts_left - i > 0) {
+            current_slice.set_attribute(letter[i] + "6LUT", lut_config);
+            current_slice.set_attribute(letter[i] + "6LUTNAME", slice_name + letter[i] + "6");
+            current_slice.set_attribute(letter[i] + "CY0", letter[i] + "X");
+            current_slice.set_attribute(letter[i] + "OUTMUX", "XOR");
+        }
+    }
+
+    return _slices.back();
 }
 
