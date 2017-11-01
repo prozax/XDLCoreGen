@@ -19,7 +19,7 @@ protected:
     Slicel &create_slice(int row, int column, int a_size);
 
 public:
-    Multiplier(int, int);
+    Multiplier(int, int, bool);
     void place(int x_pos, int y_pos, Device &device) override;
 };
 

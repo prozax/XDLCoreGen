@@ -23,7 +23,7 @@ std::ostream &operator<<(std::ostream &os, QuarterSlicel const &rhs) {
 
 
     os << rhs._name << "CY0::" << rhs._attributes.at("CY0") << " "
-       << rhs._name << "FF::" << rhs._attributes.at("FF") << " "
+       << rhs._name << "FF:" << rhs._attributes.at("FFNAME") << ":" << rhs._attributes.at("FF") << " "
        << rhs._name << "FFINIT::" << rhs._attributes.at("FFINIT") << " "
        << rhs._name << "FFMUX::" << rhs._attributes.at("FFMUX") << " "
        << rhs._name << "FFSR::" << rhs._attributes.at("FFSR") << " "
@@ -43,6 +43,7 @@ QuarterSlicel::QuarterSlicel(const std::string &_name): _name(_name) {
     _attributes.insert(std::make_pair("6LUTNAME", ""));
     _attributes.insert(std::make_pair("CY0", "#OFF"));
     _attributes.insert(std::make_pair("FF", "#OFF"));
+    _attributes.insert(std::make_pair("FFNAME", ""));
     _attributes.insert(std::make_pair("FFINIT", "#OFF"));
     _attributes.insert(std::make_pair("FFMUX", "#OFF"));
     _attributes.insert(std::make_pair("FFSR", "#OFF"));

@@ -7,6 +7,7 @@ Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"
     _attributes.insert(std::make_pair("SRUSEDMUX", "#OFF"));
     _attributes.insert(std::make_pair("SYNC_ATTR", "#OFF"));
     _attributes.insert(std::make_pair("COUTUSED", "#OFF"));
+    _attributes.insert(std::make_pair("CLKINV", "#OFF"));
 
     _slicel_count++;
 }
@@ -28,6 +29,7 @@ std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
     os << "PRECYINIT::" << rhs._attributes.at("PRECYINIT") << " ";
     os << "SRUSEDMUX::" << rhs._attributes.at("SRUSEDMUX") << " ";
     os << "COUTUSED::" << rhs._attributes.at("COUTUSED") << " ";
+    os << "CLKINV::" << rhs._attributes.at("CLKINV") << " ";
     os << "SYNC_ATTR::" << rhs._attributes.at("SYNC_ATTR") << " \"" << std::endl << ";";
 
     return os;
