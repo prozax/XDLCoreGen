@@ -9,48 +9,9 @@ Multiplier::Multiplier(int a_size, int b_size, bool is_pipelined) : _a_size(a_si
     _name = "Multiplier<" + std::to_string(_multiplier_count) + ">";
     _row_count = a_size/2 + 1;
 
-    int lut_count = a_size + 5;
-    int ff_luts_a[_row_count];
-    int ff_luts_b[_row_count];
-    int ff_luts_p[_row_count];
-    int ff_luts[_row_count];
-    std::string outpin = _is_pipelined ? "Q" : "MUX";
-
-    std::string letter[] = {"A", "B", "C", "D"};
-
-    // creating connections between slices
     for(int row = 0; row < _row_count; row++) {
-        ff_luts_a[row] = _is_pipelined && row<_row_count-1 ? a_size : 0;
-        ff_luts_b[row] = _is_pipelined && row<_row_count-1 ? b_size - 1 - row * 2 : 0;
-        ff_luts_p[row] = _is_pipelined ? row * 2 : 0;
-        ff_luts[row] = ff_luts_a[row] + ff_luts_b[row] + ff_luts_p[row];
-
         create_row(a_size, b_size, row);
-
-        if(row > 0) {
-            for (int lut_pos = 0; lut_pos < ff_luts_p[row]; lut_pos++) {
-
-                if (lut_pos < ff_luts_p[row-1]) {
-                    add_interconnect("pipeline_p" + std::to_string(lut_pos) + "_" + std::to_string(row - 1) + "-" + std::to_string(row))
-                            ->set_outpin(_name + "Slicel<" + std::to_string(row - 1) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + outpin)
-                            ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + "1");
-                }
-                else {
-                    int p_lut_pos = lut_pos + ff_luts_b[row-1] + ff_luts_a[row-1] + 1;
-                    add_interconnect("pipeline_p" + std::to_string(lut_pos) + "_" + std::to_string(row - 1) + "-" + std::to_string(row))
-                            ->set_outpin(_name + "Slicel<" + std::to_string(row - 1) + "_" + std::to_string(p_lut_pos/4) + ">", letter[p_lut_pos%4] + outpin)
-                            ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + "1");
-                }
-            }
-
-
-            for(int lut_pos = 3; lut_pos < lut_count; lut_pos++) {
-                add_interconnect("t<" + std::to_string(row) + "," + std::to_string(lut_pos - 3) + ">")
-                        ->set_outpin(_name + "Slicel<" + std::to_string(row-1) + "_" + std::to_string((lut_pos + ff_luts[row-1])/4) + ">", letter[(lut_pos + ff_luts[row-1])%4] + outpin)
-                        ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string((lut_pos + ff_luts[row] - 2)/4) + ">", letter[(lut_pos + ff_luts[row] - 2)%4] + "1")
-                        ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string((lut_pos + ff_luts[row] - 2)/4) + ">", letter[(lut_pos + ff_luts[row] - 2)%4] + "X");
-            }
-        }
+        connect_rows(row);
     }
 
 
@@ -83,7 +44,7 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
 
 
     for(int column = 0; column < slice_count; column++) {
-        int luts_left = lut_count + ff_luts - (column)*4;
+
         std::string slice_name = _name + "Slicel<" + std::to_string(row) + "_" + std::to_string(column) + ">";
         Slicel &current_slice = create_slice(row, column , a_size);
 
@@ -91,6 +52,7 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
         int bm = row * 2;
 
         for(int i = 0; i < 4; i++) {
+            int luts_left = lut_count + ff_luts - (column)*4 - i;
             int lut_pos = (column * 4) + i;
 
             // first logic lut ground connection
@@ -245,28 +207,27 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
             }
 
 
-            if(luts_left - i == 4) {    // last A LUT
+            if(luts_left == 4) {    // last A LUT
                 add_ground_connection(slice_name, letter[i] + "2"); // input a(n) in last A LUT
                 if(row == 0) {
                     add_ground_connection(slice_name, letter[i] + "1");
                     add_ground_connection(slice_name, letter[i] + "X");
                 }
             }
-            else if(luts_left - i == 3) {   // B LUT
+            else if(luts_left == 3) {   // B LUT
                 if(row == 0) {
                     add_vcc_connection(slice_name, letter[i] + "1"); // input t in first row B LUT
                     add_vcc_connection(slice_name, letter[i] + "X");
                 }
             }
-            else if(luts_left - i == 2) {   // C LUT
+            else if(luts_left == 2) {   // C LUT
                 add_vcc_connection(slice_name, letter[i] + "1"); // input t
                 add_vcc_connection(slice_name, letter[i] + "X");
             }
-            else if(luts_left - i == 1) {   // C LUT for carry routing
+            else if(luts_left == 1) {   // C LUT for carry routing
                 add_ground_connection(slice_name, letter[i] + "1");
-                //add_ground_connection(slice_name, letter[i] + "X");
             }
-            else if(luts_left - i > 0) {
+            else if(luts_left > 0) {
                 if(row == 0 && lut_pos > ff_luts) {
                     add_ground_connection(slice_name, letter[i] + "1");
                     add_ground_connection(slice_name, letter[i] + "X");
@@ -324,6 +285,49 @@ void Multiplier::place(int x_pos, int y_pos, Device &device) {
             _slices.at(pos).set_primitive_site(device.get_slice(x + x_pos, y + y_pos));
             _slices.at(pos).set_placed(true);
             pos++;
+        }
+    }
+}
+
+void Multiplier::connect_rows(int row) {
+    if(row > 0) {
+        int lut_count = _a_size + 5;
+        int ff_luts_a[_row_count];
+        int ff_luts_b[_row_count];
+        int ff_luts_p[_row_count];
+        int ff_luts[_row_count];
+        std::string outpin = _is_pipelined ? "Q" : "MUX";
+
+        std::string letter[] = {"A", "B", "C", "D"};
+
+        // creating connections between slices
+        ff_luts_a[row] = _is_pipelined && row<_row_count-1 ? _a_size : 0;
+        ff_luts_b[row] = _is_pipelined && row<_row_count-1 ? _b_size - 1 - row * 2 : 0;
+        ff_luts_p[row] = _is_pipelined ? row * 2 : 0;
+        ff_luts[row] = ff_luts_a[row] + ff_luts_b[row] + ff_luts_p[row];
+
+
+        for (int lut_pos = 0; lut_pos < ff_luts_p[row]; lut_pos++) {
+
+            if (lut_pos < ff_luts_p[row-1]) {
+                add_interconnect("pipeline_p" + std::to_string(lut_pos) + "_" + std::to_string(row - 1) + "-" + std::to_string(row))
+                        ->set_outpin(_name + "Slicel<" + std::to_string(row - 1) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + outpin)
+                        ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + "1");
+            }
+            else {
+                int p_lut_pos = lut_pos + ff_luts_b[row-1] + ff_luts_a[row-1] + 1;
+                add_interconnect("pipeline_p" + std::to_string(lut_pos) + "_" + std::to_string(row - 1) + "-" + std::to_string(row))
+                        ->set_outpin(_name + "Slicel<" + std::to_string(row - 1) + "_" + std::to_string(p_lut_pos/4) + ">", letter[p_lut_pos%4] + outpin)
+                        ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string(lut_pos/4) + ">", letter[lut_pos%4] + "1");
+            }
+        }
+
+
+        for(int lut_pos = 3; lut_pos < lut_count; lut_pos++) {
+            add_interconnect("t<" + std::to_string(row) + "," + std::to_string(lut_pos - 3) + ">")
+                    ->set_outpin(_name + "Slicel<" + std::to_string(row-1) + "_" + std::to_string((lut_pos + ff_luts[row-1])/4) + ">", letter[(lut_pos + ff_luts[row-1])%4] + outpin)
+                    ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string((lut_pos + ff_luts[row] - 2)/4) + ">", letter[(lut_pos + ff_luts[row] - 2)%4] + "1")
+                    ->add_inpin(_name + "Slicel<" + std::to_string(row) + "_" + std::to_string((lut_pos + ff_luts[row] - 2)/4) + ">", letter[(lut_pos + ff_luts[row] - 2)%4] + "X");
         }
     }
 }

@@ -15,6 +15,7 @@ protected:
     bool _is_pipelined;
 
     void create_row(int a_size, int b_size, int row);
+    void connect_rows(int row);
     void add_ports();
     Slicel &create_slice(int row, int column, int a_size);
 
