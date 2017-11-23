@@ -28,7 +28,7 @@ void Slice::set_primitive_site(PrimitiveSite *_primitive_site) {
 }
 
 std::ostream &operator<<(std::ostream &os, Slice const &rhs) {
-    os << "inst \"" << rhs._name << "\" \"SLICE\", ";
+    os << "inst \"" << rhs._name << R"(" "SLICE", )";
 
     if(rhs.is_placed())
         os << "placed " << rhs._primitive_site->get_parent()->get_name() << " " << rhs._primitive_site->get_name() << ",\n";

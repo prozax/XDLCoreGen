@@ -33,9 +33,9 @@ public:
     virtual void place(int x, int y, Device &device) = 0;
     friend std::ostream& operator<<(std::ostream& os, Module const& rhs);
 
-    void add_ground_connection(const std::string instance_name, const std::string pin_name);
+    void add_ground_connection(std::string instance_name, std::string pin_name);
 
-    void add_vcc_connection(const std::string instance_name, const std::string pin_name);
+    void add_vcc_connection(std::string instance_name, std::string pin_name);
 };
 
 

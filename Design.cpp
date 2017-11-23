@@ -47,13 +47,6 @@ std::ostream &operator<<(std::ostream &os, Design const &rhs) {
 
 void Design::place() {
     for(auto itr_module = _modules.begin(); itr_module != _modules.end(); ++itr_module) {
-//        for(auto itr_slice = (*itr_module).get_slices().begin(); itr_slice != (*itr_module).get_slices().end(); ++itr_slice) {
-//            itr_slice->set_primitive_site(_device.get_next_primitive());
-//            if(itr_slice->get_primitive_site() != nullptr) {
-//                itr_slice->set_placed(true);
-//                itr_slice->get_primitive_site()->set_used(true);
-//            }
-//        }
         (*itr_module)->place(0, 0, _device);
     }
 }

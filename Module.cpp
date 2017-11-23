@@ -1,7 +1,8 @@
 #include "Module.h"
 
 std::ostream &operator<<(std::ostream &os, Module const &rhs) {
-    os << "module \"" << rhs._name << "_HARD_MACRO" << "\" \"" << rhs._inst_name << "\", cfg \"_SYSTEM_MACRO::FALSE\"" << std::endl << ";" << std::endl;
+    os << "module \"" << rhs._name << "_HARD_MACRO" << "\" \"" << rhs._inst_name << R"(", cfg "_SYSTEM_MACRO::FALSE")"
+                                                                                 << std::endl << ";" << std::endl;
 
     for(auto i: rhs._ports) {
         os << i << std::endl;
@@ -52,7 +53,7 @@ Net* Module::get_interconnect(std::string pin_name) {
     return &(_net.at(pin_name));
 }
 
-void Module::add_ground_connection(const std::string instance_name, const std::string pin_name) {
+void Module::add_ground_connection(std::string instance_name, std::string pin_name) {
     if(_net.count("PORT_LOGIC0_" + _name) == 0) {
         // creating port and net for gnd
         add_port("gnd", instance_name, pin_name);
@@ -62,7 +63,7 @@ void Module::add_ground_connection(const std::string instance_name, const std::s
     _net.at("PORT_LOGIC0_" + _name).add_inpin(instance_name, pin_name);
 }
 
-void Module::add_vcc_connection(const std::string instance_name, const std::string pin_name) {
+void Module::add_vcc_connection(std::string instance_name, std::string pin_name) {
     if(_net.count("PORT_LOGIC1_" + _name) == 0) {
         // creating port and net for vcc
         add_port("vcc", instance_name, pin_name);

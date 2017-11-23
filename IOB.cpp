@@ -22,11 +22,11 @@ IOB::IOB(const std::string &_name) : _name(_name), _placed(false) {
 
 
 std::ostream &operator<<(std::ostream &os, IOB const &rhs) {
-    os << "inst \"" << rhs._name << "\" \"IOB\", ";
+    os << "inst \"" << rhs._name << R"(" "IOB", )";
 
     if(rhs.is_placed()) {
-//        os << "placed " << rhs._primitive_site->get_parent()->get_name() << " "
-//           << rhs._primitive_site->get_name() << "," << std::endl;
+        os << "placed " << rhs._primitive_site->get_parent() << " "
+           << rhs._primitive_site->get_name() << "," << std::endl;
     }
     else {
         os << "unplaced ," << std::endl;

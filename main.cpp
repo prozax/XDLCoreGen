@@ -16,9 +16,9 @@ int main(int argc, char* argv[]) {
 
     options.add_options()
             ("a,a_length", "A input length. Default: 8", cxxopts::value<int>(), "N")
-            ("b,b_length", "A input length. Default: 8", cxxopts::value<int>(), "N")
+            ("b,b_length", "B input length. Default: 8", cxxopts::value<int>(), "N")
             ("o,output", "Output file path. If omitted the output will be printed.", cxxopts::value<std::string>(), "<path>")
-            ("p,pipelined", "Generate pipelined Multiplier. Default: not pipelined")
+            ("p,pipelined", "Generate pipelined multiplier. Default: not pipelined")
             ("h,help", "Print help")
             ;
 

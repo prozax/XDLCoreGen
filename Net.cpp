@@ -16,8 +16,8 @@ Net* Net::add_inpin(std::string instance, std::string pin) {
 }
 
 std::ostream &operator<<(std::ostream &os, Net const &rhs) {
-     os << "net \"";
-//     os << rhs._name << "\" " << rhs._type << "," << std::endl;
+    os << "net \"";
+
     os << rhs._name << "\" " << "," << std::endl;
 
     if(!rhs._outpin.empty()) {
