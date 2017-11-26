@@ -25,12 +25,16 @@ protected:
     std::vector<Port> _ports;
 
 public:
+    Module();
+    Module(std::string);
+
+    void add_slice(Slicel);
     std::deque<Slicel> &get_slices();
     Net* add_interconnect(std::string);
     Net* get_interconnect(std::string);
     void add_port(std::string, std::string, std::string);
     void add_port(std::string, Slice&, std::string);
-    virtual void place(int x, int y, Device &device) = 0;
+    void place(int x, int y, Device &device);
     friend std::ostream& operator<<(std::ostream& os, Module const& rhs);
 
     void add_ground_connection(std::string instance_name, std::string pin_name);

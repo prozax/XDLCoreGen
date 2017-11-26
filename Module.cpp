@@ -1,5 +1,10 @@
 #include "Module.h"
 
+
+Module::Module(): Module("") {}
+
+Module::Module(std::string name): _name(name) {}
+
 std::ostream &operator<<(std::ostream &os, Module const &rhs) {
     os << "module \"" << rhs._name << "_HARD_MACRO" << "\" \"" << rhs._inst_name << R"(", cfg "_SYSTEM_MACRO::FALSE")"
                                                                                  << std::endl << ";" << std::endl;
@@ -83,6 +88,14 @@ void Module::add_port(std::string portname, Slice & slice, std::string slice_por
 
 std::deque<Slicel> &Module::get_slices() {
     return _slices;
+}
+
+void Module::place(int x, int y, Device &device) {
+//TODO: implement
+}
+
+void Module::add_slice(Slicel s) {
+    _slices.push_back(s);
 }
 
 

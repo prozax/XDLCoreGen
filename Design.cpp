@@ -11,6 +11,9 @@ Design::Design(const std::string &_name, Device &_device): _name(_name), _device
 
 }
 
+
+Design::Design(Device & d): Design("__XILINX_NMC_MACRO", d) {}
+
 /*!
  *
  * @param m

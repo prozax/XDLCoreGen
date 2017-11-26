@@ -25,7 +25,7 @@ std::ostream &operator<<(std::ostream &os, IOB const &rhs) {
     os << "inst \"" << rhs._name << R"(" "IOB", )";
 
     if(rhs.is_placed()) {
-        os << "placed " << rhs._primitive_site->get_parent() << " "
+        os << "placed " << rhs._primitive_site->get_name() << " "
            << rhs._primitive_site->get_name() << "," << std::endl;
     }
     else {

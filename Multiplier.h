@@ -21,7 +21,7 @@ protected:
 
 public:
     Multiplier(int, int, bool);
-    void place(int x_pos, int y_pos, Device &device) override;
+    void place(int x_pos, int y_pos, Device &device);
 };
 
 

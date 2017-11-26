@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     int b_size = 8;
     bool is_pipelined = false;
 
-
+    // TODO: error for wrong paramter usage (e.g. -b12)
     options.add_options()
             ("a,a_length", "A input length. Default: 8", cxxopts::value<int>(), "N")
             ("b,b_length", "B input length. Default: 8", cxxopts::value<int>(), "N")
@@ -40,22 +40,26 @@ int main(int argc, char* argv[]) {
 
     is_pipelined = (result.count("p") != 0);
 
+    //TODO: check if device file exists
     Device d = Device("xc6vlx75tff484-3", "./devices/xc6vlx75tff484-3.xdl");
-    Multiplier test_multi = Multiplier(a_size, b_size, is_pipelined);
-    Design test_design = Design("__XILINX_NMC_MACRO", d);
-    test_design.add_module(test_multi);
-    test_design.place();
+
+    Multiplier m = Multiplier(a_size, b_size, is_pipelined);
+    Design design = Design(d);
+    design.add_module(m);
+    design.place();
 
 
     if(result.count("output")) {
         ofstream outfile;
         outfile.open(result["output"].as<std::string>());
-        outfile << test_design;
+        outfile << design;
         outfile.close();
     }
     else {
-        cout << test_design;
+        cout << design;
     }
+
+
 
 
     return 0;

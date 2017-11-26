@@ -18,7 +18,8 @@ protected:
     std::vector<Module*> _modules;
 
 public:
-    Design(const std::string&, Device&);
+    Design(Device &);
+    Design(const std::string&, Device &);
 
     void add_module(Module&);
     friend std::ostream& operator<<(std::ostream& os, Design const& rhs);

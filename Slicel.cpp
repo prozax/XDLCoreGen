@@ -13,7 +13,7 @@ Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"
 }
 
 std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
-    os << "inst \"" << rhs._name << "\" \"SLICEL\", ";
+    os << "inst \"" << rhs._name << R"(" "SLICEL", )";
 
     if(rhs.is_placed())
         os << "placed " << rhs._primitive_site->get_parent()->get_name() << " "
