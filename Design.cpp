@@ -48,8 +48,8 @@ std::ostream &operator<<(std::ostream &os, Design const &rhs) {
     return os;
 }
 
-void Design::place() {
+void Design::place(int x_offset, int y_offset) {
     for(auto itr_module = _modules.begin(); itr_module != _modules.end(); ++itr_module) {
-        (*itr_module)->place(0, 0, _device);
+        (*itr_module)->place(x_offset, y_offset, _device);
     }
 }

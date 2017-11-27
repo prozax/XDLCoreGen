@@ -23,7 +23,7 @@ public:
 
     void add_module(Module&);
     friend std::ostream& operator<<(std::ostream& os, Design const& rhs);
-    void place();
+    void place(int x_offset, int y_offset);
 };
 
 
