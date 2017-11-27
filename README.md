@@ -1,6 +1,6 @@
 # XDLCoreGen
-XDLCoreGen provides a framework for creating FPGA hard macros in XDL (Xilinx Design Language).
-It implements the multiplier described in the paper "An Efficient Softcore Multiplier Architecture for Xilinx FPGAs" by Kumm et al.
+XDLCoreGen provides a framework for creating FPGA hard macros in XDL (Xilinx Design Language) for Xilinx VIrtex 6 and 7 devices.
+It also implements the multiplier described in the paper "An Efficient Softcore Multiplier Architecture for Xilinx FPGAs" by Kumm et al.
 
 ## Usage
 ### Creating a hard macro
@@ -31,7 +31,7 @@ Connections can be added with the `add_interconnect(<netname>)` method.
 ```
 m.add_interconnect("net1")->set_outpin("testslicel1", "AMUX")->add_inpin("testslicel2", "B5");
 ```
-This call creates a new `Net` or uses the existing one with the name "net1", sets an output pin, and adds an input pin.
+This creates a new `Net` or uses the existing one with the name "net1", sets an output pin, and adds an input pin.
 A net can have one outpin and multiple inpins.
 `add_inpin()` method calls can be chained together because it returns a pointer to the `Net` object.
 
@@ -67,7 +67,25 @@ Now you can output the XDL source to any stream.
 cout << test_design;
 ```
 
-#### Creating a Design
+#### Creating a carry chain
+To create a carry chain the *PRECYINIT* attribute of the first slice in the chain has to be set to *0, 1* or *AX*. This is the initial value.
+For every slice in the chain except the last *COUTUSED* has to be set to `0` (active). For the last slice it has to be set to `#OFF`.
+For the next slices the COUT pin of the previous slice has to be connected to the CIN pin.
+
+```
+Module m = Module("testmodule");
+
+Slicel s = Slicel("testslicel1");
+s.set_attribute("PRECYINIT", "0");
+m.set_attribute("COUTUSED", "0");
+m.add_slice(s);
+
+s = Slicel("testslicel2");
+m.set_attribute("COUTUSED", "#OFF");
+m.add_slice(s);
+
+m.add_interconnect("carry<0-1>")->set_outpin("testslicel1", "COUT")->add_inpin("testslicel2", "CIN");
+```
 
 
 ### Generating a Multiplier hard macro
@@ -117,4 +135,55 @@ This **.ncd* file can then be converted to VHDL with the *netgen* tool.
 netgen -ofmt vhdl -sim -w 32x32_pipelined.ncd
 ```
 
+## Creating device description files
+Device description files can be created with the xdl tool using the `-report` switch.
+
+```
+xdl -report xc6vlx75tff784
+```
+
+
 ## Slicel Attributes
+#### General Slice configuration
+PRECYINIT - Carry chain initial value - #OFF, 0, 1, AX
+
+SRUSEDMUX
+
+SYNC_ATTR
+
+COUTUSED - Carry chain output used. - #OFF (not used) / 0 (used)
+
+CLKINV - Clock inverted - #OFF (not used) / 0 (used)
+
+#### Slicel LUT(?) configuration
+These attributes are prefixed by *A, B, C* or *D* and configure one logic unit in a slice.
+
+5FFINIT - 5FF register initial value. - #OFF, INIT0, INIT1
+
+5FFMUX - 5FF register input selection. - #OFF, A5Q (5FF output), F7, CY(carry), XOR (previous carry XOR O6), O5 (5LUT output), O6 (6LUT output)
+
+5FFSR
+
+5LUT
+
+5LUTNAME
+
+6LUT
+
+6LUTNAME
+
+CY0
+
+FF - Latch/register - #OFF, #FF, #LATCH
+
+FFNAME - Latch/register name - either empty or string
+
+FFINIT - Latch/register initial value.  - #OFF, INIT0, INIT1
+
+FFMUX - Latch/register input selection. - #OFF, F7, CY, XOR, AX, O5, O6
+
+FFSR
+
+OUTMUX
+
+USED
