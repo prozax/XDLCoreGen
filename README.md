@@ -145,45 +145,48 @@ xdl -report xc6vlx75tff784
 
 ## Slicel Attributes
 #### General Slice configuration
-PRECYINIT - Carry chain initial value - #OFF, 0, 1, AX
-
-SRUSEDMUX
-
-SYNC_ATTR
-
-COUTUSED - Carry chain output used. - #OFF (not used) / 0 (used)
-
-CLKINV - Clock inverted - #OFF (not used) / 0 (used)
+| Attribute | Explanation | Value | Default  |
+|-----------|-------------|-------|----------|
+| PRECYINIT | Carry chain initial value | #OFF, 0, 1, AX | #OFF
+|SRUSEDMUX | SR input of the flip-flops used. | #OFF, 0 (used) | #OFF
+|SYNC_ATTR | Reset type. | #OFF, SYNC, ASYNC | #OFF
+|COUTUSED | Carry chain output used. | #OFF (not used) / 0 (used) | #OFF
+|CLKINV | Clock inverted | #OFF (not used) / 0 (used) | #OFF
 
 #### Slicel LUT(?) configuration
 These attributes are prefixed by *A, B, C* or *D* and configure one logic unit in a slice.
 
-5FFINIT - 5FF register initial value. - #OFF, INIT0, INIT1
+| Attribute | Explanation | Value | Default |
+|-----------|-------------|-------|----------|
+| 5FFINIT | 5FF register initial value. | #OFF, <p>INIT0, INIT1 | #OFF
+| 5FFMUX | 5FF register input selection. | #OFF, A5Q (5FF output), F7, CY(carry), XOR (previous carry XOR O6), O5 (5LUT output), O6 (6LUT output) | #OFF
+| 5FFSR |
+| 5LUT |
+| 5LUTNAME |
+| 6LUT |
+| 6LUTNAME |
+| CY0 | Select carry *propagate* (DI) input. | #OFF, O5, (A-D)X
+| FF | Latch/register | #OFF, #FF, #LATCH
+| FFNAME | Latch/register name | either empty or string
+| FFINIT | Latch/register initial value. | #OFF, INIT0, INIT1
+| FFMUX | Latch/register input selection. | #OFF, F7, CY, XOR, AX, O5, O6
+| FFSR
+| OUTMUX |
+| USED | O6 pass through output used. | #OFF, 0 (active)
 
-5FFMUX - 5FF register input selection. - #OFF, A5Q (5FF output), F7, CY(carry), XOR (previous carry XOR O6), O5 (5LUT output), O6 (6LUT output)
+##### LUT configuration
+LUT configurations use variables A1-A5 for 5LUTs and A1-A6 for 6LUTs and the boolean operators from the table below. All LUTs use A for variables regardless of their name.
 
-5FFSR
+| Operator | Symbol |
+|----------|--------|
+| NOT      | ~      |
+| AND      | *      |
+| OR       | +      |
+| XOR      | @      |
 
-5LUT
-
-5LUTNAME
-
-6LUT
-
-6LUTNAME
-
-CY0
-
-FF - Latch/register - #OFF, #FF, #LATCH
-
-FFNAME - Latch/register name - either empty or string
-
-FFINIT - Latch/register initial value.  - #OFF, INIT0, INIT1
-
-FFMUX - Latch/register input selection. - #OFF, F7, CY, XOR, AX, O5, O6
-
-FFSR
-
-OUTMUX
-
-USED
+Examples:
+```
+s1.set_attribute("B6LUT", "(A5*A6)");
+s2.set_attribute("D6LUT", "(A6+~A6)*(((~A2*(A3*(A4@A5)))+(A2*(A3+(A4@A5)))))");
+s3.set_attribute("C5LUT", "(((~A2*(A3*(A4@A5)))+(A2*(A3+(A4@A5)))))");
+```
