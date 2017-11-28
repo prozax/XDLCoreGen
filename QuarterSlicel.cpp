@@ -92,9 +92,9 @@ void QuarterSlicel::set_attribute(const std::string attr, const std::string val)
 }
 
 
-std::string QuarterSlicel::get_attribute(const std::string &attr) {
+const std::string QuarterSlicel::get_attribute(std::string &attr) const {
     if(_attributes.find(attr) != _attributes.end()) {
-        return _attributes[attr];
+        return _attributes.at(attr);
     }
     else {
         return "";

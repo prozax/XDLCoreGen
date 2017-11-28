@@ -25,7 +25,7 @@ public:
     void set_name(const std::string &_name);
 
     void set_attribute(const std::string attr, const std::string val);
-    std::string get_attribute(const std::string &attr);
+    const std::string get_attribute(std::string &attr) const;
 };
 
 

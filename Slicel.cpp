@@ -59,5 +59,33 @@ void Slicel::set_attribute(std::string attr, std::string val) {
     }
 }
 
+const std::string Slicel::get_attribute(std::string attr) const {
+    std::string ret = "";
+
+    if(_attributes.find(attr) != _attributes.end()) {
+        return _attributes.at(attr);
+    }
+    else {
+        switch (attr.at(0)) {
+            case 'A':
+                ret = _a.get_attribute(attr);
+                break;
+            case 'B':
+                ret = _b.get_attribute(attr);
+                break;
+            case 'C':
+                ret = _c.get_attribute(attr);
+                break;
+            case 'D':
+                ret = _d.get_attribute(attr);
+                break;
+            default:
+                break;
+        }
+    }
+
+    return ret;
+}
+
 
 

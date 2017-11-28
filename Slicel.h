@@ -21,6 +21,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, Slicel const& rhs);
     void set_attribute(std::string attr, std::string val);
+    const std::string get_attribute(std::string attr) const;
 };
 
 #endif //XDLGEN_SLICEL_H

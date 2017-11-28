@@ -1,6 +1,6 @@
 # XDLCoreGen
 XDLCoreGen provides a framework for creating FPGA hard macros in XDL (Xilinx Design Language) for Xilinx VIrtex 6 and 7 devices.
-It also implements the multiplier described in the paper "An Efficient Softcore Multiplier Architecture for Xilinx FPGAs" by Kumm et al.
+It also implements a multiplier described in the paper "An Efficient Softcore Multiplier Architecture for Xilinx FPGAs" by Kumm et al.
 
 ## Usage
 ### Creating a hard macro
@@ -67,6 +67,8 @@ Now you can output the XDL source to any stream.
 cout << test_design;
 ```
 
+For an example of a hard macro implemented as a class derived from `Module` with a custom placing algorithm see examples/ExampleModule.cpp.
+
 #### Creating a carry chain
 To create a carry chain the *PRECYINIT* attribute of the first slice in the chain has to be set to *0, 1* or *AX*. This is the initial value.
 For every slice in the chain except the last *COUTUSED* has to be set to `0` (active). For the last slice it has to be set to `#OFF`.
@@ -87,6 +89,7 @@ m.add_slice(s);
 m.add_interconnect("carry<0-1>")->set_outpin("testslicel1", "COUT")->add_inpin("testslicel2", "CIN");
 ```
 
+If you are using the build-in placing algorithm the slices have to be added in the correct order to the module.
 
 ### Generating a Multiplier hard macro
 To customize the multiplier you can use the following parameters:
@@ -108,7 +111,7 @@ xdlcoregen -a 32 -b 32 -p -o 32x32_pipelined.xdl
 The devices folder must be in the same directory as the executable.
 
 ## Using a hard macro
-To use the hard macro in VHDL you need to convert the **.xdl* file to a **.nmc* file using the *xdl* tool with the *-xdl2ncd* parameter and a **.nmc* file as output.
+To use the hard macro in VHDL you need to convert the *\*.xdl* file to a *\*.nmc* file using the *xdl* tool with the *-xdl2ncd* parameter and a *\*.nmc* file as output.
 
 ```
 xdl -xdl2ncd 32x32_pipelined.xdl 32x32_pipelined.nmc
@@ -123,13 +126,13 @@ attribute LOC of <instance> : label is "SLICE_X0Y0";
  to the declaration block of the architecture where `<instance>` is the name of the hard macro component instance and `SLICE_X0Y0` contains the placing offsets of your hard macro (default is X0Y0).
 
 ### Simulating the output
-To simulate the XDL output you need to generate a VHDL representation of the multiplier. To get this you have to generate a **.ncd* file first using the *xdl* tool with the *-xdl2ncd* parameter and an output file with the **.ncd* ending.
+To simulate the XDL output you need to generate a VHDL representation of the multiplier. To get this you have to generate a *\*.ncd* file first using the *xdl* tool with the *-xdl2ncd* parameter and an output file with the *\*.ncd* ending.
 
 ```
 xdl -xdl2ncd 32x32_pipelined.xdl 32x32_pipelined.ncd
 ```
 
-This **.ncd* file can then be converted to VHDL with the *netgen* tool.
+This *\*.ncd* file can then be converted to VHDL with the *netgen* tool.
 
 ```
 netgen -ofmt vhdl -sim -w 32x32_pipelined.ncd
@@ -147,32 +150,33 @@ xdl -report xc6vlx75tff784
 #### General Slice configuration
 | Attribute | Explanation | Value | Default  |
 |-----------|-------------|-------|----------|
-| PRECYINIT | Carry chain initial value | #OFF, 0, 1, AX | #OFF
-|SRUSEDMUX | SR input of the flip-flops used. | #OFF, 0 (used) | #OFF
-|SYNC_ATTR | Reset type. | #OFF, SYNC, ASYNC | #OFF
-|COUTUSED | Carry chain output used. | #OFF (not used) / 0 (used) | #OFF
-|CLKINV | Clock inverted | #OFF (not used) / 0 (used) | #OFF
+| PRECYINIT | Carry chain initial value. | #OFF <br>0 <br>1 <br>AX | #OFF
+| SRUSEDMUX | SR input of the flip-flops used. | #OFF <br>0 (used) | #OFF
+| SYNC_ATTR | Reset type. | #OFF <br>SYNC <br>ASYNC | #OFF
+| COUTUSED | Carry chain output used. | #OFF (not used) <br>0 (used) | #OFF
+| CLKINV | Clock inverter. | #OFF (not used) <br>0 (used) | #OFF
 
 #### Slicel LUT(?) configuration
 These attributes are prefixed by *A, B, C* or *D* and configure one logic unit in a slice.
 
 | Attribute | Explanation | Value | Default |
 |-----------|-------------|-------|----------|
-| 5FFINIT | 5FF register initial value. | #OFF, <p>INIT0, INIT1 | #OFF
-| 5FFMUX | 5FF register input selection. | #OFF, A5Q (5FF output), F7, CY(carry), XOR (previous carry XOR O6), O5 (5LUT output), O6 (6LUT output) | #OFF
-| 5FFSR |
-| 5LUT |
-| 5LUTNAME |
-| 6LUT |
-| 6LUTNAME |
-| CY0 | Select carry *propagate* (DI) input. | #OFF, O5, (A-D)X
-| FF | Latch/register | #OFF, #FF, #LATCH
-| FFNAME | Latch/register name | either empty or string
-| FFINIT | Latch/register initial value. | #OFF, INIT0, INIT1
-| FFMUX | Latch/register input selection. | #OFF, F7, CY, XOR, AX, O5, O6
-| FFSR
-| OUTMUX |
-| USED | O6 pass through output used. | #OFF, 0 (active)
+| 5FFINIT | 5FF register initial value. | #OFF<br>INIT0<br>INIT1 | #OFF
+| 5FFMUX | 5FF register input selection. | #OFF <br>O5 <br>AX | #OFFö
+| 5FFSR | 5FF register initial SR value. | #OFF <br>SRLOW <br>SRHIGH | #OFF
+| 5LUT | O5 function. | string (see below) |
+| 5LUTNAME | O5 LUT name. | string |
+| 6LUT | O6 function. | string (see below) |
+| 6LUTNAME | O6 LUT name. | string |
+| CY0 | Select carry *propagate* (DI) input. | #OFF <br>O5 <br>(A-D)X
+| FF | Latch/register | #OFF <br>#FF <br>#LATCH | #OFF
+| FFNAME | Latch/register name | string
+| FFINIT | Latch/register initial value. | #OFF <br>INIT0 <br>INIT1 | #OFF
+| FFMUX | Latch/register input selection. | #OFF <br>F7 <br>CY <br>XOR <br>AX <br>O5 <br>O6 | #OFF
+| FFSR | Latch/register initial SR value. | #OFF <br>SRLOW <br>SRHIGH | #OFF
+| OUTMUX | OUTMUX output selection | #OFF <br>A5Q (5FF output) <br>F7 <br>CY(carry) <br>XOR (previous carry XOR O6) <br>O5 (5LUT output) <br>O6 (6LUT output) | #OFF
+| USED | O6 pass through output used. | #OFF <br>0 (active) | #OFF
+
 
 ##### LUT configuration
 LUT configurations use variables A1-A5 for 5LUTs and A1-A6 for 6LUTs and the boolean operators from the table below. All LUTs use A for variables regardless of their name.

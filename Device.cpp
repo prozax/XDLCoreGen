@@ -5,21 +5,27 @@
 #include <regex>
 #include "Device.h"
 
-Device::Device(std::string _name, std::string path) : _column_count(0), _row_count(0), _slice_row_count(0),
-                                                      _slice_column_count(0), _name(_name), _report_file_path(path){
+Device::Device(std::string path) : _column_count(0), _row_count(0), _slice_row_count(0),
+                                                      _slice_column_count(0), _name(""), _report_file_path(path){
     std::ifstream df;
     std::string line;
     std::regex position_regex("X([0-9]+)Y([0-9]+)");
     std::smatch matches;
+    bool header_done = false;
     df.open(_report_file_path);
+
 
     // TODO: cleanup, read row/column counts and device name
     while (std::getline(df, line)) {
         if (line.at(0) != '#') {
             std::istringstream iss(line);
-            std::string bracket, tmp, tmp2, name, type;
+            std::string bracket, tmp, tmp2, name, type, device_name;
             int row, column, primitive_site_count;
 
+            if(!header_done && iss >> bracket >> tmp >> device_name >> tmp2) {
+                _name = device_name;
+                header_done = true;
+            }
 
             if (iss >> bracket >> row >> column >> name >> type >> primitive_site_count) {
                 if (std::regex_search(name, matches, position_regex)) {

@@ -23,7 +23,7 @@ protected:
     std::map<std::tuple<int, int>, PrimitiveSite*> _slices;
 
 public:
-    Device(std::string, std::string);
+    Device(std::string);
     friend std::ostream& operator<<(std::ostream& os, Device const& rhs);
     const std::string &get_name() const;
     int get_column_count() const;
