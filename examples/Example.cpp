@@ -1,11 +1,8 @@
 
 #include "Example.h"
-#include "Device.h"
-#include "Module.h"
-#include "Design.h"
 
 Example::Example() {
-    Device d = Device("xc6vlx75tff484-3", "./devices/xc6vlx75tff484-3.xdl");
+    Device d = Device("./devices/xc6vlx75tff484-3.xdl");
 
     //Multiplier test_multi = Multiplier(a_size, b_size, is_pipelined);
     Module m = Module("testmodule");
@@ -29,7 +26,9 @@ Example::Example() {
     m.add_port("out(0)", s, "BMUX");
     m.add_interconnect("outpin<0>")->set_outpin(s.get_name(), "BMUX");
 
-    Design test_design = Design(d);
-    test_design.add_module(m);
-    test_design.place();
+    Design design = Design(d);
+    design.add_module(m);
+    design.place(0, 0);
+
+    std::cout << design;
 }

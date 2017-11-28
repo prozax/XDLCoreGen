@@ -3,10 +3,12 @@
 #define XDLCOREGEN_EXAMPLEMODULE_H
 
 
-#include "Module.h"
+#include "../Module.h"
 
 class ExampleModule: public Module  {
-
+public:
+    ExampleModule();
+    void place(int x_offset, int y_offset, Device &device);
 };
 
 
