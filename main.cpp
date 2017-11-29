@@ -18,21 +18,23 @@ int main(int argc, char* argv[]) {
     string device_path;
 
     options.add_options()
-            ("a,a_length", "A input length. Default: 8", cxxopts::value<int>(), "N")
-            ("b,b_length", "B input length. Default: 8", cxxopts::value<int>(), "N")
             ("d,device_file", "Device file path.", cxxopts::value<std::string>(), "<path>")
+            ("multiplier", "Generate a mutliplier macro.")
             ("o,output", "Output file path. If omitted the output will be printed.", cxxopts::value<std::string>(), "<path>")
-            ("p,pipelined", "Generate pipelined multiplier. Default: not pipelined")
+            ("p,pipelined", "Generate pipelined macro. Default: not pipelined")
             ("x,x_offset", "X offset for the placer. Default: 0", cxxopts::value<int>(), "N")
             ("y,y_offset", "Y offset for the placer. Default: 0", cxxopts::value<int>(), "N")
-            ("h,help", "Print help")
-            ;
+            ("h,help", "Print help");
+
+    options.add_options("multiplier")
+            ("a,a_length", "A input length. Default: 8", cxxopts::value<int>(), "N")
+            ("b,b_length", "B input length. Default: 8", cxxopts::value<int>(), "N");
 
     auto result = options.parse(argc, argv);
 
     if (result.count("help"))
     {
-        std::cout << options.help({""}) << std::endl;
+        std::cout << options.help({"", "multiplier"}) << std::endl;
         return 0;
     }
 
@@ -43,14 +45,11 @@ int main(int argc, char* argv[]) {
             return 0;
         }
     }
-
-    if(result.count("a_length")) {
-        a_size = result["a_length"].as<int>();
+    else {
+        cout<< "Error: device missing.";
+        return 0;
     }
 
-    if(result.count("b_length")) {
-        b_size = result["b_length"].as<int>();
-    }
 
     if(result.count("x_offset")) {
         x_offset = result["x_offset"].as<int>();
@@ -62,27 +61,33 @@ int main(int argc, char* argv[]) {
 
     is_pipelined = (result.count("pipelined") != 0);
 
-    Device d = Device("./devices/xc6vlx75tff484-3.xdl");
+    if(result.count("multiplier")) {
+        if (result.count("a_length")) {
+            a_size = result["a_length"].as<int>();
+        }
 
-    Multiplier m = Multiplier(a_size, b_size, is_pipelined);
-    Design design = Design(d);
-    design.add_module(m);
-    design.place(x_offset, y_offset);
+        if (result.count("b_length")) {
+            b_size = result["b_length"].as<int>();
+        }
 
-//    Example e = Example();
+        Multiplier m = Multiplier(a_size, b_size, is_pipelined);
 
-    if(result.count("output")) {
-        ofstream outfile;
-        outfile.open(result["output"].as<string>());
-        outfile << design;
-        outfile.close();
+        Device d = Device(device_path);
+
+        Design design = Design(d);
+        design.add_module(m);
+        design.place(x_offset, y_offset);
+
+        if(result.count("output")) {
+            ofstream outfile;
+            outfile.open(result["output"].as<string>());
+            outfile << design;
+            outfile.close();
+        }
+        else {
+            cout << design;
+        }
     }
-    else {
-        cout << design;
-    }
-
-
-
 
     return 0;
 }
