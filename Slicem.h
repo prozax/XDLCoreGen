@@ -7,7 +7,6 @@
 class Slicem: public Slicel {
 public:
     Slicem(const std::string &_name);
-
 };
 
 #endif //XDLGEN_SLICEM_H

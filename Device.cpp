@@ -15,7 +15,6 @@ Device::Device(std::string path) : _column_count(0), _row_count(0), _slice_row_c
     df.open(_report_file_path);
 
 
-    // TODO: cleanup, read row/column counts and device name
     while (std::getline(df, line)) {
         if (line.at(0) != '#') {
             std::istringstream iss(line);
@@ -27,38 +26,37 @@ Device::Device(std::string path) : _column_count(0), _row_count(0), _slice_row_c
                 header_done = true;
             }
 
-            if (iss >> bracket >> row >> column >> name >> type >> primitive_site_count) {
-                if (std::regex_search(name, matches, position_regex)) {
-                    int x_tile = std::stoi(matches[1]);
-                    int y_tile = std::stoi(matches[2]);
-                    Tile *new_tile = new Tile(name, type, row, column, x_tile, y_tile);
+            if (iss >> bracket >> row >> column >> name >> type >> primitive_site_count
+                && std::regex_search(name, matches, position_regex)) {
+                int x_tile = std::stoi(matches[1]);
+                int y_tile = std::stoi(matches[2]);
+                auto *new_tile = new Tile(name, type, row, column, x_tile, y_tile);
 
-                    if(_row_count < row) _row_count = row;
-                    if(_column_count < column) _column_count = column;
+                if(_row_count < row) _row_count = row;
+                if(_column_count < column) _column_count = column;
 
-                    for(int n = 0; n < primitive_site_count; n++) {
-                        if (std::getline(df, line)) {
-                            std::istringstream iss(line);
-                            if (iss >> bracket >> name >> type >> tmp >> tmp2 &&
-                                    std::regex_search(name, matches, position_regex)) {
-                                int x_primitive = std::stoi(matches[1]);
-                                int y_primitive = std::stoi(matches[2]);
+                for(int n = 0; n < primitive_site_count; n++) {
+                    if (std::getline(df, line)) {
+                        std::istringstream iss(line);
+                        if (iss >> bracket >> name >> type >> tmp >> tmp2 &&
+                                std::regex_search(name, matches, position_regex)) {
+                            int x_primitive = std::stoi(matches[1]);
+                            int y_primitive = std::stoi(matches[2]);
 
-                                PrimitiveSite *pm = new PrimitiveSite(name, type, x_primitive, y_primitive, new_tile);
-                                new_tile->add_primitive_site(pm);
+                            auto *pm = new PrimitiveSite(name, type, x_primitive, y_primitive, new_tile);
+                            new_tile->add_primitive_site(pm);
 
-                                if(type == "SLICEL" || type == "SLICEM") {
-                                    if(_slice_column_count < x_primitive) _slice_column_count = x_primitive;
-                                    if(_slice_row_count < y_primitive) _slice_row_count = y_primitive;
+                            if(type == "SLICEL" || type == "SLICEM") {
+                                if(_slice_column_count < x_primitive) _slice_column_count = x_primitive;
+                                if(_slice_row_count < y_primitive) _slice_row_count = y_primitive;
 
-                                    _slices.insert(std::make_pair(std::tuple<int, int>(x_primitive, y_primitive), pm));
-                                }
+                                _slices.emplace(std::tuple<int, int>(x_primitive, y_primitive), pm);
                             }
                         }
                     }
-
-                    _tiles.insert(std::make_pair(std::tuple<int, int>(column, row), *new_tile));
                 }
+
+                _tiles.emplace(std::tuple<int, int>(column, row), *new_tile);
             }
         }
     }

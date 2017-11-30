@@ -17,12 +17,12 @@
 
 class Module {
 protected:
-    std::string _name;
-    std::string _inst_name;
-    std::deque<Slicel> _slices;
-    std::map<std::string, IOB> _pins;
-    std::map<std::string, Net> _net;
-    std::vector<Port> _ports;
+    std::string _name; /**<  */
+    std::string _inst_name; /**<  */
+    std::deque<Slicel> _slices; /**<  */
+    std::map<std::string, IOB> _pins; /**<  */
+    std::map<std::string, Net> _net; /**<  */
+    std::vector<Port> _ports; /**<  */
 
 public:
     Module();
@@ -34,11 +34,9 @@ public:
     Net* get_interconnect(std::string);
     void add_port(std::string, std::string, std::string);
     void add_port(std::string, Slice&, std::string);
-    void place(int x, int y, Device &device);
+    virtual void place(int x, int y, Device &device);
     friend std::ostream& operator<<(std::ostream& os, Module const& rhs);
-
     void add_ground_connection(std::string instance_name, std::string pin_name);
-
     void add_vcc_connection(std::string instance_name, std::string pin_name);
 };
 

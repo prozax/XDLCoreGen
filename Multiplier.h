@@ -8,11 +8,10 @@
 
 class Multiplier: public Module {
 protected:
-    static int _multiplier_count;
-    int _row_count;
-    int _a_size;
-    int _b_size;
-    bool _is_pipelined;
+    int _row_count; /**< Number of rows the multiplier useses. */
+    int _a_size; /**< Number of a input bits. */
+    int _b_size; /**< Number of b input bits. */
+    bool _is_pipelined; /**< Pipelining switch. */
 
     void create_row(int a_size, int b_size, int row);
     void connect_rows(int row);
@@ -21,7 +20,7 @@ protected:
 
 public:
     Multiplier(int, int, bool);
-    void place(int x_pos, int y_pos, Device &device);
+    void place(int x_offset, int y_offset, Device &device) override;
 };
 
 

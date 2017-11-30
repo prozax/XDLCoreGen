@@ -9,10 +9,10 @@
 
 class Slice {
 protected:
-    std::string _name;
-    std::map<std::string, std::string> _attributes;
-    bool _placed;
-    PrimitiveSite* _primitive_site;
+    std::string _name; /**< Instance name. */
+    std::map<std::string, std::string> _attributes; /**< Slice attribute map. */
+    bool _placed; /**< True if the slice has a primitive site. */
+    PrimitiveSite* _primitive_site; /**< Primitive site this slice is placed on. */
 
 public:
     Slice(const std::string &_name);

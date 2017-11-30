@@ -13,14 +13,14 @@
 
 class Device {
 protected:
-    std::string _name;
-    std::string _report_file_path;
-    int _column_count;
-    int _row_count;
-    int _slice_row_count;
-    int _slice_column_count;
-    std::map<std::tuple<int, int>, Tile> _tiles;
-    std::map<std::tuple<int, int>, PrimitiveSite*> _slices;
+    std::string _name; /**< Device name. */
+    std::string _report_file_path; /**< Path to the device report file. */
+    int _column_count; /**< Number of columns on the device. */
+    int _row_count; /**< Number of rows on the device. */
+    int _slice_row_count; /**< Number of rows with slices. */
+    int _slice_column_count; /**< Number of columns with slices. */
+    std::map<std::tuple<int, int>, Tile> _tiles; /**< Map of tiles. */
+    std::map<std::tuple<int, int>, PrimitiveSite*> _slices; /**< Map of primitive sites on the device.*/
 
 public:
     Device(std::string);

@@ -13,13 +13,13 @@
 
 class Tile {
 protected:
-    std::vector<PrimitiveSite*> _primitive_sites;
-    std::string _name;
-    std::string _type;
-    int _row;
-    int _column;
-    int _pos_x;
-    int _pos_y;
+    std::vector<PrimitiveSite*> _primitive_sites; /**< Primitve sites on this tile. */
+    std::string _name; /**< Name of the tile. */
+    std::string _type; /**< Type of the tile. */
+    int _row; /**< Row of this tile. */
+    int _column; /**< Column of this tile. */
+    int _pos_x; /**< X position of this tile. */
+    int _pos_y; /**< Y position of this tile. */
 
 public:
     Tile(const std::string &_name, const std::string &_type, int _row, int _column, int _pos_x, int _pos_y);

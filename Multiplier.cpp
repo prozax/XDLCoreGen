@@ -3,10 +3,16 @@
 #include "Device.h"
 #include <math.h>
 
-int Multiplier::_multiplier_count = 0;
+/*!
+ *
+ *
+ * @param a_size Number of a inputs.
+ * @param b_size Number of b inputs.
+ * @param is_pipelined Pipeline register switch.
+ */
 
 Multiplier::Multiplier(int a_size, int b_size, bool is_pipelined) : _a_size(a_size), _b_size(b_size), _is_pipelined(is_pipelined) {
-    _name = "Multiplier<" + std::to_string(_multiplier_count) + ">";
+    _name = "Multiplier";
     _row_count = a_size/2 + 1;
 
     for(int row = 0; row < _row_count; row++) {
@@ -15,7 +21,7 @@ Multiplier::Multiplier(int a_size, int b_size, bool is_pipelined) : _a_size(a_si
     }
 
 
-    // adding ports for inputs
+    // adding ports for inputs and outputs
     add_ports();
 
 
@@ -29,8 +35,15 @@ Multiplier::Multiplier(int a_size, int b_size, bool is_pipelined) : _a_size(a_si
 
 
     _inst_name = _slices.front().get_name();
-    _multiplier_count++;
 }
+
+/*!
+ * Creates a new row of the multiplier and configures the slices.
+ *
+ * @param a_size Number of a inputs.
+ * @param b_size Number of b inputs.
+ * @param row Current row.
+ */
 
 void Multiplier::create_row(int a_size, int b_size, int row) {
     // LUT inputs: A1: t - A2: an - A3: an-1 - A4: bm-1 - A5: bm - A6: bm+1
@@ -238,6 +251,10 @@ void Multiplier::create_row(int a_size, int b_size, int row) {
     }
 }
 
+/*!
+ * Creates a port for every net that begins with "input_" or "output_"
+ */
+
 void Multiplier::add_ports() {
     for (auto n: _net) {
         if((n.second.get_name().find("input_") != std::string::npos)
@@ -262,7 +279,15 @@ void Multiplier::add_ports() {
     }
 }
 
-void Multiplier::place(int x_pos, int y_pos, Device &device) {
+/*!
+ * Places the multiplier in a tightly packed square. Pipeline registers are placed before the logic LUTs.
+ *
+ * @param x_offset X position offset on the Device for the design.
+ * @param y_offset Y position offset on the Device for the design.
+ * @param device Device instance to get placing information from.
+ */
+
+void Multiplier::place(int x_offset, int y_offset, Device &device) {
     size_t pos = 0;
 
     // the multiplier is rotated 90 degrees to fit the carry chain, so rows and columns are swapped
@@ -274,12 +299,18 @@ void Multiplier::place(int x_pos, int y_pos, Device &device) {
         int slice_count = (int) ceil(((double)lut_count + (double)ff_luts)/4.0);
 
         for (int y = 0; y < slice_count; ++y) {
-            _slices.at(pos).set_primitive_site(device.get_slice(x + x_pos, y + y_pos));
+            _slices.at(pos).set_primitive_site(device.get_slice(x + x_offset, y + y_offset));
             _slices.at(pos).set_placed(true);
             pos++;
         }
     }
 }
+
+/*!
+ * Connects a row to the previous one.
+ *
+ * @param row Current row.
+ */
 
 void Multiplier::connect_rows(int row) {
 
@@ -352,6 +383,14 @@ void Multiplier::connect_rows(int row) {
         }
     }
 }
+
+/*!
+ * Creates a configured Slicel instance for the given position.
+ *
+ * @param row Current row.
+ * @param column Current column.
+ * @param a_size Number of a inputs.
+ */
 
 Slicel &Multiplier::create_slice(int row, int column, int a_size) {
     int ff__luts_a = _is_pipelined && row<_row_count-1 ? a_size : 0;

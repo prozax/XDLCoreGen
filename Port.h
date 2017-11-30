@@ -9,9 +9,8 @@
 
 class Port {
 protected:
-    //Slice& _slice;
-    std::string _port_name;
-    Pin _pin;
+    std::string _port_name; /**<  */
+    Pin _pin; /**<  */
 
 public:
     Port(std::string, std::string, std::string);

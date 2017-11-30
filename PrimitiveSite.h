@@ -10,12 +10,13 @@ class Tile;
 
 class PrimitiveSite {
 protected:
-    std::string _name;
-    std::string _type;
-    Tile* _parent;
-    int _pos_x;
-    int _pos_y;
-    bool _used;
+    std::string _name; /**<  */
+    std::string _type; /**<  */
+    Tile* _parent; /**<  */
+    int _pos_x; /**<  */
+    int _pos_y; /**<  */
+    bool _used; /**<  */
+
 public:
     Tile *get_parent() const;
     void set_parent(Tile *_parent);

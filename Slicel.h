@@ -9,16 +9,14 @@
 
 class Slicel: public Slice {
 private:
-    static int _slicel_count;
-
-    QuarterSlicel _a;
-    QuarterSlicel _b;
-    QuarterSlicel _c;
-    QuarterSlicel _d;
+    static int _slicel_count; /**< Number of Slicel instances created. */
+    QuarterSlicel _a; /**< A LUTs and registers. */
+    QuarterSlicel _b; /**< B LUTs and registers. */
+    QuarterSlicel _c; /**< C LUTs and registers. */
+    QuarterSlicel _d; /**< D LUTs and registers. */
 
 public:
     Slicel(const std::string &_name);
-
     friend std::ostream& operator<<(std::ostream& os, Slicel const& rhs);
     void set_attribute(std::string attr, std::string val);
     const std::string get_attribute(std::string attr) const;

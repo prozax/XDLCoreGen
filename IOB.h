@@ -9,14 +9,13 @@
 
 class IOB {
 protected:
-    std::string _name;
-    std::map<std::string, std::string> _attributes;
-    bool _placed;
-    PrimitiveSite* _primitive_site;
+    std::string _name; /**<  */
+    std::map<std::string, std::string> _attributes; /**<  */
+    bool _placed; /**<  */
+    PrimitiveSite* _primitive_site; /**<  */
 
 public:
     IOB(const std::string &_name);
-
     friend std::ostream& operator<<(std::ostream& os, IOB const& rhs);
     bool is_placed()const;
     void set_attribute(std::string attr, std::string val);

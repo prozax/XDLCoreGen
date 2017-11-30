@@ -7,9 +7,8 @@
 
 class QuarterSlicel {
 private:
-    std::string _name;
-
-    std::map<std::string, std::string> _attributes;
+    std::string _name; /**< Name of this quarter slice. */
+    std::map<std::string, std::string> _attributes; /**< Attribute map. */
 
 public:
     QuarterSlicel(const std::string &_name);
@@ -20,10 +19,8 @@ public:
                   const std::string &_FFSR, const std::string &_OUTMUX, const std::string &_USED);
 
     friend std::ostream& operator<<(std::ostream& os, QuarterSlicel const& rhs);
-
     const std::string & get_name() const;
     void set_name(const std::string &_name);
-
     void set_attribute(const std::string attr, const std::string val);
     const std::string get_attribute(std::string &attr) const;
 };

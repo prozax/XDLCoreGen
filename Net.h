@@ -12,10 +12,10 @@
 
 class Net {
 protected:
-    std::string _name;
-    std::string _type;
-    std::vector<Pin> _inpins;
-    Pin _outpin;
+    std::string _name; /**<  */
+    std::string _type; /**<  */
+    std::vector<Pin> _inpins; /**<  */
+    Pin _outpin; /**<  */
 
 public:
     Net(const std::string &_name);
