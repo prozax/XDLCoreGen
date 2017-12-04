@@ -17,12 +17,12 @@
 
 class Module {
 protected:
-    std::string _name; /**<  */
-    std::string _inst_name; /**<  */
-    std::deque<Slicel> _slices; /**<  */
-    std::map<std::string, IOB> _pins; /**<  */
-    std::map<std::string, Net> _net; /**<  */
-    std::vector<Port> _ports; /**<  */
+    std::string _name; /**< Name of the module. */
+    std::string _inst_name; /**< Instance name of the reference PrimitiveSite. */
+    std::deque<Slicel> _slices; /**< List of Slicel. */
+    std::map<std::string, IOB> _pins; /**< Map of IOBs. */
+    std::map<std::string, Net> _net; /**< Map of Nets. */
+    std::vector<Port> _ports; /**< Vector of Ports. */
 
 public:
     Module();
@@ -31,7 +31,7 @@ public:
     void add_slice(Slicel);
     std::deque<Slicel> &get_slices();
     Net* add_interconnect(std::string);
-    Net* get_interconnect(std::string);
+
     void add_port(std::string, std::string, std::string);
     void add_port(std::string, Slice&, std::string);
     virtual void place(int x, int y, Device &device);

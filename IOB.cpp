@@ -1,6 +1,12 @@
 
 #include "IOB.h"
 
+/*!
+ * Constructor that creates an unplaced IOB instance.
+ *
+ * @param name Name of the instance.
+ */
+
 IOB::IOB(const std::string &_name) : _name(_name), _placed(false) {
     _attributes.insert(std::make_pair("DELAY_SELECT", "#OFF"));
     _attributes.insert(std::make_pair("DIFFI_INUSED", "#OFF"));
@@ -59,10 +65,21 @@ std::ostream &operator<<(std::ostream &os, IOB const &rhs) {
     return os;
 }
 
+/*!
+ * Returns placing status of the instance.
+ *
+ * @return True if placed, false if unplaced.
+ */
 bool IOB::is_placed()const {
     return _placed;
 }
 
+/*!
+ * Sets an attribute or adds it if it doesn't exist.
+ *
+ * @param attr Attribute name.
+ * @param val Attribute value.
+ */
 void IOB::set_attribute(std::string attr, std::string val) {
     if(_attributes.find(attr) != _attributes.end()) {
         _attributes[attr] = val;

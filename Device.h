@@ -31,7 +31,6 @@ public:
     int get_slice_row_count() const;
     int get_slice_column_count() const;
     const std::map<std::tuple<int, int>, Tile> &get_tiles() const;
-    PrimitiveSite* get_next_primitive();
     PrimitiveSite *get_slice(int x, int y);
 };
 

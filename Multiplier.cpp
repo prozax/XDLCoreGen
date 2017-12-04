@@ -20,10 +20,8 @@ Multiplier::Multiplier(int a_size, int b_size, bool is_pipelined) : _a_size(a_si
         connect_rows(row);
     }
 
-
     // adding ports for inputs and outputs
     add_ports();
-
 
     if(_is_pipelined) {
         for(auto s: _slices) {

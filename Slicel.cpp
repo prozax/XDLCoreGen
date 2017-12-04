@@ -1,15 +1,16 @@
 #include "Slicel.h"
 
-int Slicel::_slicel_count = 0;
-
-Slicel::Slicel(const std::string &_name): Slice(_name), _a("A"), _b("B"), _c("C"), _d("D"){
+/*!
+ * Creates an unplaced Slicel instance with four QuarterSlicel instances called A, B, C and D.
+ *
+ * @param name Name of the slice.
+ */
+Slicel::Slicel(const std::string &name): Slice(name), _a("A"), _b("B"), _c("C"), _d("D"){
     _attributes.insert(std::make_pair("PRECYINIT", "#OFF"));
     _attributes.insert(std::make_pair("SRUSEDMUX", "#OFF"));
     _attributes.insert(std::make_pair("SYNC_ATTR", "#OFF"));
     _attributes.insert(std::make_pair("COUTUSED", "#OFF"));
     _attributes.insert(std::make_pair("CLKINV", "#OFF"));
-
-    _slicel_count++;
 }
 
 std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
@@ -35,6 +36,14 @@ std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
     return os;
 }
 
+/*!
+ * Sets an attribute in the slicel. If the attribute is not found in the slicel it will be set in the
+ * QuarterSlicel according to the first letter of the attribute name. If the first letter doesn't
+ * correspond to a QuarterSlicel or doesn't exist in the QuarterSlicel it will be ignored.
+ *
+ * @param attr Name of the attribute.
+ * @param val New value of the attribute.
+ */
 void Slicel::set_attribute(std::string attr, std::string val) {
     if(_attributes.find(attr) != _attributes.end()) {
         _attributes[attr] = val;
@@ -59,6 +68,11 @@ void Slicel::set_attribute(std::string attr, std::string val) {
     }
 }
 
+/*!
+ *
+ * @param attr Name of a attribute in the Slicel or in a QuarterSlicel.
+ * @return Value of the attribute or an empty string if the attribute doesn't exist.
+ */
 const std::string Slicel::get_attribute(std::string attr) const {
     std::string ret = "";
 

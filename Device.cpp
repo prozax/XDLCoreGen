@@ -5,6 +5,12 @@
 #include <regex>
 #include "Device.h"
 
+/*!
+ * This constructor takes a file path and parses the file for the device name and all primitive sites
+ * on the device.
+ *
+ * @return Path to a device report file.
+ */
 Device::Device(std::string path) : _column_count(0), _row_count(0), _slice_row_count(0),
                                                       _slice_column_count(0), _name(""), _report_file_path(path){
     std::ifstream df;
@@ -46,6 +52,7 @@ Device::Device(std::string path) : _column_count(0), _row_count(0), _slice_row_c
                             auto *pm = new PrimitiveSite(name, type, x_primitive, y_primitive, new_tile);
                             new_tile->add_primitive_site(pm);
 
+                            // saving slices separately
                             if(type == "SLICEL" || type == "SLICEM") {
                                 if(_slice_column_count < x_primitive) _slice_column_count = x_primitive;
                                 if(_slice_row_count < y_primitive) _slice_row_count = y_primitive;
@@ -80,41 +87,50 @@ std::ostream &operator<<(std::ostream &os, Device const &rhs) {
     return os;
 }
 
+/*!
+ * Returns the device name.
+ *
+ * @return Device name.
+ */
 const std::string &Device::get_name() const {
     return _name;
 }
 
+/*!
+ * Returns the total column count of the device.
+ *
+ * @return Column count.
+ */
 int Device::get_column_count() const {
     return _column_count;
 }
 
+/*!
+ * Returns the total row count of the device.
+ *
+ * @return Row count.
+ */
 int Device::get_row_count() const {
     return _row_count;
 }
+
+/*!
+ * Returns a map of all tiles.
+ *
+ * @return Map of tiles.
+ */
 
 const std::map<std::tuple<int, int>, Tile> &Device::get_tiles() const {
     return _tiles;
 }
 
-PrimitiveSite* Device::get_next_primitive() {
-    int last_row = _row_count;
-    int last_column = _column_count;
-
-    for(int i = last_column; i >= 0; i--) {
-        for(int j = last_row; j >= 0; j--) {
-            Tile t = _tiles.at(std::tuple<int, int>(i, j));
-
-            for(auto p: t.get_primitive_sites()) {
-                if (!p->is_used() && (p->get_type() == "SLICEL" || p->get_type() == "SLICEM")) {
-                    return p;
-                }
-            }
-        }
-    }
-
-    return nullptr;
-}
-
+/*!
+ * Returns a pointer to the slice at the given coordinates or nullptr if it doesn't exist.
+ *
+ * @param x X coordinate of the slice.
+ * @param y Y coordinate of the slice.
+ * @return Pointer to slice at x/y or nullptr.
+ */
 PrimitiveSite* Device::get_slice(int x, int y) {
     if(_slices.count(std::tuple<int, int>(x, y)) > 0) {
         return _slices.at(std::tuple<int, int>(x, y));
@@ -123,10 +139,20 @@ PrimitiveSite* Device::get_slice(int x, int y) {
     return nullptr;
 }
 
+/*!
+ * Returns the number of rows that contain slices on the device.
+ *
+ * @return Number of rows that contain slices of this device.
+ */
 int Device::get_slice_row_count() const {
     return _slice_row_count;
 }
 
+/*!
+ * Returns the number of columns that contain slices on the device.
+ *
+ * @return Number of columns that contain slices of this device.
+ */
 int Device::get_slice_column_count() const {
     return _slice_column_count;
 }

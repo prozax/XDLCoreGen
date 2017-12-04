@@ -10,12 +10,12 @@ class Tile;
 
 class PrimitiveSite {
 protected:
-    std::string _name; /**<  */
-    std::string _type; /**<  */
-    Tile* _parent; /**<  */
-    int _pos_x; /**<  */
-    int _pos_y; /**<  */
-    bool _used; /**<  */
+    std::string _name; /**< Name of the primitive site. */
+    std::string _type; /**< Type of the primitive site. */
+    Tile* _parent; /**< Pointer to the Tile containing this primitive site. */
+    int _pos_x; /**< X coordinate of the primitive site. */
+    int _pos_y; /**< Y coordinate of the primitive site. */
+    bool _used; /**< True if something is placed on this primitive site, false if not. */
 
 public:
     Tile *get_parent() const;

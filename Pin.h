@@ -6,8 +6,8 @@
 
 class Pin {
 private:
-    std::string _instance; /**<  */
-    std::string _pin; /**<  */
+    std::string _instance; /**< PrimitiveSite instance the pin belongs to. */
+    std::string _pin; /**< Name of the pin. */
 
 public:
     Pin(std::string, std::string);

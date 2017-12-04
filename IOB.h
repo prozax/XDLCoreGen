@@ -9,10 +9,10 @@
 
 class IOB {
 protected:
-    std::string _name; /**<  */
-    std::map<std::string, std::string> _attributes; /**<  */
-    bool _placed; /**<  */
-    PrimitiveSite* _primitive_site; /**<  */
+    std::string _name; /**< Name of the instance */
+    std::map<std::string, std::string> _attributes; /**< attribute map */
+    bool _placed; /**< True if placed, false if unplaced. */
+    PrimitiveSite* _primitive_site; /**< pointer to the primitive site the instance is placed on. */
 
 public:
     IOB(const std::string &_name);

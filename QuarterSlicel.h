@@ -12,11 +12,6 @@ private:
 
 public:
     QuarterSlicel(const std::string &_name);
-    QuarterSlicel(const std::string &_name, const std::string &_5FFINIT, const std::string &_5FFMUX,
-                  const std::string &_5FFSR, const std::string &_5LUT, const std::string &_5LUTNAME,
-                  const std::string &_6LUT, const std::string &_6LUTNAME, const std::string &_CY0,
-                  const std::string &_FF, const std::string &_FFINIT, const std::string &_FFMUX,
-                  const std::string &_FFSR, const std::string &_OUTMUX, const std::string &_USED);
 
     friend std::ostream& operator<<(std::ostream& os, QuarterSlicel const& rhs);
     const std::string & get_name() const;

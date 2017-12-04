@@ -1,8 +1,17 @@
 
 #include "Port.h"
 
-Port::Port(std::string _portname, std::string _slice_name, std::string _pin): _port_name(_portname), _pin(_slice_name, _pin) {
-}
+#include <utility>
+
+/*!
+ * Constructor with instance name and pin name.
+ *
+ * @param portname Name of the port.
+ * @param ps_name Name of the instance of the PrimitiveSite the port is connected to.
+ * @param pin Name of the Pin on the PrimitiveSite the port is connected to.
+ */
+Port::Port(std::string portname, std::string ps_name, std::string pin): _port_name(std::move(portname)), _pin(
+        std::move(ps_name), std::move(pin)) {}
 
 std::ostream &operator<<(std::ostream &os, Port const &rhs) {
     os << "port \"" << rhs._port_name << "\" \"";

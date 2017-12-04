@@ -12,10 +12,10 @@
 
 class Net {
 protected:
-    std::string _name; /**<  */
-    std::string _type; /**<  */
-    std::vector<Pin> _inpins; /**<  */
-    Pin _outpin; /**<  */
+    std::string _name; /**< Name of the net. */
+    std::string _type; /**< Type of the net. Either "gnd", "vcc" or empty for normal interconnects */
+    std::vector<Pin> _inpins; /**< Vector of input Pins. */
+    Pin _outpin; /**< Output Pin. */
 
 public:
     Net(const std::string &_name);

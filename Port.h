@@ -9,8 +9,8 @@
 
 class Port {
 protected:
-    std::string _port_name; /**<  */
-    Pin _pin; /**<  */
+    std::string _port_name; /**< Name of the port. */
+    Pin _pin; /**< Pin connected to the port. */
 
 public:
     Port(std::string, std::string, std::string);

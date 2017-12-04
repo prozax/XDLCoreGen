@@ -9,7 +9,6 @@
 
 class Slicel: public Slice {
 private:
-    static int _slicel_count; /**< Number of Slicel instances created. */
     QuarterSlicel _a; /**< A LUTs and registers. */
     QuarterSlicel _b; /**< B LUTs and registers. */
     QuarterSlicel _c; /**< C LUTs and registers. */
