@@ -1,6 +1,6 @@
 # XDLCoreGen
 XDLCoreGen provides a framework for creating FPGA hard macros in XDL (Xilinx Design Language) for Xilinx Virtex 6 and 7 devices.
-It also implements a multiplier described in the paper "An Efficient Softcore Multiplier Architecture for Xilinx FPGAs" by Kumm et al.
+It also implements a multiplier described in the paper "An Efficient Softcore Multiplier Architecture for Xilinx FPGAs" by Martin Kumm, Shahid Abbas and Peter Zipf.
 
 ## Usage
 ### Creating a hard macro
@@ -52,7 +52,7 @@ m.add_ground_connection("testslicel1", "A3");
 ```
 
 
-To create a XDL file the module has to be added to a `Design`. The `Design` object needs a `Device` to place the slices onto.
+To create an XDL file the module has to be added to a `Design`. The `Design` object needs a `Device` to place the slices onto.
 ```
 Device d = Device("./devices/xc6vlx75tff484-3.xdl");
 Design test_design = Design(d);
@@ -158,34 +158,6 @@ netgen -ofmt vhdl -sim -w 32x32_pipelined.ncd 32x32_pipelined.vhd
 This VHDL output can then be used like any other VHDL entity and has the same configuration as the XDL macro.
 
 
-## Generating a Multiplier hard macro
-To customize the multiplier you can use the following parameters:
-
-```
-  XDLCoreGen [OPTION...]
-
-  -d, --device_file <path>  Device file path.
-      --multiplier          Generate a mutliplier macro.
-  -o, --output <path>       Output file path. If omitted the output will be
-                            printed.
-  -p, --pipelined           Generate pipelined macro. Default: not pipelined
-  -x, --x_offset N          X offset for the placer. Default: 0
-  -y, --y_offset N          Y offset for the placer. Default: 0
-  -h, --help                Print help
-
- multiplier options:
-  -a, --a_length N  A input length. Default: 8
-  -b, --b_length N  B input length. Default: 8
-```
-
-To display a list of possible parameters use *-h* or *--help*.
-
-Example:
-```
-xdlcoregen --multiplier -a 32 -b 32 --pipelined --device_file "./device/xc6vlx75tff484-3.xdl" --output 32x32_pipelined.xdl
-```
-This creates a pipelined mutliplier with 32x32 inputs using the device described in *xc6vlx75tff484-3.xdl* and writes it to *32x32_pipelined.xdl*.
-
 ## Creating device description files
 Device description files can be created with the xdl tool using the `-report` switch.
 
@@ -193,6 +165,55 @@ Device description files can be created with the xdl tool using the `-report` sw
 xdl -report xc6vlx75tff784
 ```
 
+
+## Slicel Configuration
+#### General Slicel configuration
+| Attribute | Explanation | Value | Default  |
+|-----------|-------------|-------|----------|
+| PRECYINIT | Carry chain initial value. | #OFF (not used) <br>0 <br>1 <br>AX (AX input pin) | #OFF |
+| SRUSEDMUX | SR input of the flip-flops used. | #OFF (not used) <br>0 (used) | #OFF |
+| SYNC_ATTR | Reset type. | #OFF (not used) <br>SYNC <br>ASYNC | #OFF |
+| COUTUSED | Carry chain output used. | #OFF (not used) <br>0 (used) | #OFF |
+| CLKINV | Clock inverter. | #OFF (not used) <br>0 (used) | #OFF |
+
+#### Slicel LUT/Register configuration
+These attributes are prefixed by *A, B, C* or *D* and configure one logic unit in a slice.
+
+| Attribute | Explanation | Value | Default |
+|-----------|-------------|-------|----------|
+| 5FFINIT | 5FF register initial value. | #OFF (not used)<br>INIT0<br>INIT1 | #OFF |
+| 5FFMUX | 5FF register input selection. | #OFF (not used)<br>O5 <br>(A-D)X | #OFF |
+| 5FFSR | 5FF register initial SR value. | #OFF (not used)<br>SRLOW <br>SRHIGH | #OFF |
+| 5LUT | O5 function. | string (see below) | |
+| 5LUTNAME | O5 LUT name. | string | |
+| 6LUT | O6 function. | string (see below) | |
+| 6LUTNAME | O6 LUT name. | string | |
+| CY0 | Select carry *propagate* (DI) input. | #OFF (not used)<br>O5 <br>(A-D)X | #OFF |
+| FF | Latch/register | #OFF (not used)<br>#FF <br>#LATCH | #OFF |
+| FFNAME | Latch/register name | string | |
+| FFINIT | Latch/register initial value. | #OFF (not used)<br>INIT0 <br>INIT1 | #OFF |
+| FFMUX | Latch/register input selection. | #OFF (not used)<br>F7 <br>CY (carry) <br>XOR (previous carry XOR O6)<br>(A-D)X (X input pass through) <br>O5 (5LUT output) <br>O6 (6LUT output)| #OFF |
+| FFSR | Latch/register initial SR value. | #OFF (not used)<br>SRLOW <br>SRHIGH | #OFF |
+| OUTMUX | OUTMUX output selection | #OFF (not used)<br>A5Q (5FF output) <br>F7 <br>CY (carry) <br>XOR (previous carry XOR O6) <br>O5 (5LUT output) <br>O6 (6LUT output) | #OFF |
+| USED | O6 pass through output used. | #OFF (not used)<br>0 (active) | #OFF |
+
+
+##### LUT configuration
+LUT configurations use variables A1-A5 for 5LUTs or A1-A6 for 6LUTs and the boolean operators from the table below. All LUTs use A for variables regardless of their name.
+
+| Operator | Symbol |
+|----------|--------|
+| NOT      | ~      |
+| AND      | *      |
+| OR       | +      |
+| XOR      | @      |
+
+Examples:
+```
+s1.set_attribute("B6LUT", "(A5*A6)");
+s2.set_attribute("D6LUT", "(A6+~A6)*(((~A2*(A3*(A4@A5)))+(A2*(A3+(A4@A5)))))");
+s3.set_attribute("C5LUT", "(((~A2*(A3*(A4@A5)))+(A2*(A3+(A4@A5)))))");
+```
 
 ## Generating a Multiplier hard macro
 To customize the multiplier you can use the following parameters:
@@ -220,52 +241,12 @@ Example:
 ```
 xdlcoregen --multiplier --a_length 32 --b_length 32 --pipelined --device_file "./device/xc6vlx75tff484-3.xdl" --output 32x32_pipelined.xdl
 ```
+This creates a pipelined mutliplier with 32x32 inputs using the device described in *xc6vlx75tff484-3.xdl* and writes it to *32x32_pipelined.xdl*.
 
-## Slicel Configuration
-#### General Slicel configuration
-| Attribute | Explanation | Value | Default  |
-|-----------|-------------|-------|----------|
-| PRECYINIT | Carry chain initial value. | #OFF (not used) <br>0 <br>1 <br>AX (AX input pin) | #OFF
-| SRUSEDMUX | SR input of the flip-flops used. | #OFF (not used) <br>0 (used) | #OFF
-| SYNC_ATTR | Reset type. | #OFF (not used) <br>SYNC <br>ASYNC | #OFF
-| COUTUSED | Carry chain output used. | #OFF (not used) <br>0 (used) | #OFF
-| CLKINV | Clock inverter. | #OFF (not used) <br>0 (used) | #OFF
+## Limitations
+This framework currently only supports the creation of hard macros. This means a design must contain a single module with ports and no further nets or instances.
 
-#### Slicel LUT/Register configuration
-These attributes are prefixed by *A, B, C* or *D* and configure one logic unit in a slice.
-
-| Attribute | Explanation | Value | Default |
-|-----------|-------------|-------|----------|
-| 5FFINIT | 5FF register initial value. | #OFF (not used)<br>INIT0<br>INIT1 | #OFF
-| 5FFMUX | 5FF register input selection. | #OFF (not used)<br>O5 <br>(A-D)X | #OFF
-| 5FFSR | 5FF register initial SR value. | #OFF (not used)<br>SRLOW <br>SRHIGH | #OFF
-| 5LUT | O5 function. | string (see below) |
-| 5LUTNAME | O5 LUT name. | string |
-| 6LUT | O6 function. | string (see below) |
-| 6LUTNAME | O6 LUT name. | string |
-| CY0 | Select carry *propagate* (DI) input. | #OFF (not used)<br>O5 <br>(A-D)X | #OFF
-| FF | Latch/register | #OFF (not used)<br>#FF <br>#LATCH | #OFF
-| FFNAME | Latch/register name | string
-| FFINIT | Latch/register initial value. | #OFF (not used)<br>INIT0 <br>INIT1 | #OFF
-| FFMUX | Latch/register input selection. | #OFF (not used)<br>F7 <br>CY (carry) <br>XOR (previous carry XOR O6)<br>(A-D)X (X input pass through) <br>O5 (5LUT output) <br>O6 (6LUT output)| #OFF
-| FFSR | Latch/register initial SR value. | #OFF (not used)<br>SRLOW <br>SRHIGH | #OFF
-| OUTMUX | OUTMUX output selection | #OFF (not used)<br>A5Q (5FF output) <br>F7 <br>CY (carry) <br>XOR (previous carry XOR O6) <br>O5 (5LUT output) <br>O6 (6LUT output) | #OFF
-| USED | O6 pass through output used. | #OFF (not used)<br>0 (active) | #OFF
-
-
-##### LUT configuration
-LUT configurations use variables A1-A5 for 5LUTs or A1-A6 for 6LUTs and the boolean operators from the table below. All LUTs use A for variables regardless of their name.
-
-| Operator | Symbol |
-|----------|--------|
-| NOT      | ~      |
-| AND      | *      |
-| OR       | +      |
-| XOR      | @      |
-
-Examples:
-```
-s1.set_attribute("B6LUT", "(A5*A6)");
-s2.set_attribute("D6LUT", "(A6+~A6)*(((~A2*(A3*(A4@A5)))+(A2*(A3+(A4@A5)))))");
-s3.set_attribute("C5LUT", "(((~A2*(A3*(A4@A5)))+(A2*(A3+(A4@A5)))))");
-```
+## Credits
+* Martin Kumm, Shahid Abbas and Peter Zipf: An Efficient Softcore Multiplier Architecture for Xilinx FPGAs In: 22nd IEEE Symposium on Computer Arithmetic (ARITH 22), 2015 ([preprint](http://www.uni-kassel.de/eecs/fileadmin/datas/fb16/Fachgebiete/Digitaltechnik/preprints/2015_ARITH_kumm.pdf), copyright IEEE, http://dx.doi.org/10.1109/ARITH.2015.17)
+* Ghosh, Subhrashankha, "XDL-Based Hard Macro Generator" (2011). All Theses and Dissertations. 2507. https://scholarsarchive.byu.edu/etd/2507
+* Option parser library [cxxopts](https://github.com/jarro2783/cxxopts)
