@@ -1,0 +1,24 @@
+<map id="PrimitiveSite.h" name="PrimitiveSite.h">
+<area shape="rect" id="node2" href="$_slice_8h.html" title="Slice.h" alt="" coords="266,155,329,181"/>
+<area shape="rect" id="node12" href="$_device_8h.html" title="Device.h" alt="" coords="165,379,235,405"/>
+<area shape="rect" id="node19" href="$_tile_8h.html" title="Tile.h" alt="" coords="204,80,257,107"/>
+<area shape="rect" id="node20" href="$_primitive_site_8cpp.html" title="PrimitiveSite.cpp" alt="" coords="353,155,471,181"/>
+<area shape="rect" id="node22" href="$_i_o_b_8h.html" title="IOB.h" alt="" coords="554,80,609,107"/>
+<area shape="rect" id="node3" href="$_slicel_8h.html" title="Slicel.h" alt="" coords="202,229,267,256"/>
+<area shape="rect" id="node16" href="$_port_8h.html" title="Port.h" alt="" coords="429,229,486,256"/>
+<area shape="rect" id="node18" href="$_slice_8cpp.html" title="Slice.cpp" alt="" coords="291,229,367,256"/>
+<area shape="rect" id="node4" href="$_module_8h.html" title="Module.h" alt="" coords="347,453,421,480"/>
+<area shape="rect" id="node11" href="$_slicem_8h.html" title="Slicem.h" alt="" coords="273,304,346,331"/>
+<area shape="rect" id="node15" href="$_slicel_8cpp.html" title="Slicel.cpp" alt="" coords="118,304,197,331"/>
+<area shape="rect" id="node5" href="$_design_8h.html" title="Design.h" alt="" coords="347,528,421,555"/>
+<area shape="rect" id="node8" href="$_multiplier_8h.html" title="Multiplier.h" alt="" coords="237,528,323,555"/>
+<area shape="rect" id="node10" href="$_module_8cpp.html" title="Module.cpp" alt="" coords="445,528,534,555"/>
+<area shape="rect" id="node6" href="$_design_8cpp.html" title="Design.cpp" alt="" coords="373,603,459,629"/>
+<area shape="rect" id="node7" href="$main_8cpp.html" title="main.cpp" alt="" coords="273,603,348,629"/>
+<area shape="rect" id="node9" href="$_multiplier_8cpp.html" title="Multiplier.cpp" alt="" coords="151,603,249,629"/>
+<area shape="rect" id="node14" href="$_slicem_8cpp.html" title="Slicem.cpp" alt="" coords="259,379,346,405"/>
+<area shape="rect" id="node13" href="$_device_8cpp.html" title="Device.cpp" alt="" coords="77,453,163,480"/>
+<area shape="rect" id="node17" href="$_port_8cpp.html" title="Port.cpp" alt="" coords="422,304,493,331"/>
+<area shape="rect" id="node21" href="$_tile_8cpp.html" title="Tile.cpp" alt="" coords="43,155,109,181"/>
+<area shape="rect" id="node23" href="$_i_o_b_8cpp.html" title="IOB.cpp" alt="" coords="619,155,688,181"/>
+</map>

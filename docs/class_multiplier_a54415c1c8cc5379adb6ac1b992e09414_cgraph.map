@@ -1,0 +1,5 @@
+<map id="Multiplier::connect_rows" name="Multiplier::connect_rows">
+<area shape="rect" id="node2" href="$class_module.html#a0ddd931db99b99364cf8a195c1d10cee" title="Creates a new net if it doesn&#39;t exist yet and returns a pointer to it. " alt="" coords="216,5,387,32"/>
+<area shape="rect" id="node3" href="$class_net.html#a8377cfbdb352d0d410cbc26fd277f919" title="Sets the outpin of the net. " alt="" coords="246,56,357,83"/>
+<area shape="rect" id="node4" href="$class_net.html#ad4bddb4f342c872a74e8657ac6783d86" title="Creates an inpin in the net. " alt="" coords="249,107,354,133"/>
+</map>

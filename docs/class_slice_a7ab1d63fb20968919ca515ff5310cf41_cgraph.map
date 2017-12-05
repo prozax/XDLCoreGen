@@ -1,0 +1,6 @@
+<map id="Slice::set_primitive_site" name="Slice::set_primitive_site">
+<area shape="rect" id="node2" href="$class_slice.html#ae57b9afd22fddcc1a89d1b37fbcd72ed" title="Slice::is_placed" alt="" coords="234,5,349,32"/>
+<area shape="rect" id="node3" href="$class_primitive_site.html#a2a88655abe2d3bb85387ebeb7a365123" title="PrimitiveSite::get\l_parent" alt="" coords="231,57,351,98"/>
+<area shape="rect" id="node4" href="$class_tile.html#a37851da31bee98909fe604869dafa0f9" title="Tile::get_name" alt="" coords="238,123,345,149"/>
+<area shape="rect" id="node5" href="$class_primitive_site.html#a05d0ac8af2312089a0691970fa794cee" title="PrimitiveSite::get_name" alt="" coords="212,173,371,200"/>
+</map>

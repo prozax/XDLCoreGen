@@ -1,0 +1,5 @@
+<map id="Module::add_interconnect" name="Module::add_interconnect">
+<area shape="rect" id="node2" href="$class_multiplier.html#ae0563393a114964de7a08d61477f555c" title="Multiplier::Multiplier" alt="" coords="435,23,569,50"/>
+<area shape="rect" id="node3" href="$class_multiplier.html#a27ec67e0c7955e187acf1889ad26a18a" title="Multiplier::create_row" alt="" coords="233,23,378,50"/>
+<area shape="rect" id="node4" href="$class_multiplier.html#a54415c1c8cc5379adb6ac1b992e09414" title="Multiplier::connect_rows" alt="" coords="224,74,387,100"/>
+</map>

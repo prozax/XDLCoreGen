@@ -1,0 +1,6 @@
+<map id="Slicem" name="Slicem">
+<area shape="rect" id="node2" href="$class_slicel.html" title="Slicel" alt="" coords="25,260,80,287"/>
+<area shape="rect" id="node3" href="$class_slice.html" title="Slice" alt="" coords="27,184,78,211"/>
+<area shape="rect" id="node4" href="$class_primitive_site.html" title="PrimitiveSite" alt="" coords="5,95,100,121"/>
+<area shape="rect" id="node5" href="$class_tile.html" title="Tile" alt="" coords="31,5,74,32"/>
+</map>

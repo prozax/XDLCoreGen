@@ -1,0 +1,6 @@
+<map id="Module::place" name="Module::place">
+<area shape="rect" id="node2" href="$class_device.html#aebb3e4f47485df526d4f8b8ec38f5f93" title="Returns a pointer to the slice at the given coordinates or nullptr if it doesn&#39;t exist. " alt="" coords="172,5,292,32"/>
+<area shape="rect" id="node3" href="$class_primitive_site.html#a3c0b97b038d1cc7240436bce8aec9f00" title="PrimitiveSite::is_used" alt="" coords="159,56,305,83"/>
+<area shape="rect" id="node4" href="$class_device.html#acb2ad0c89b4a290151069bddd3099b6f" title="Returns the total row count of the device. " alt="" coords="156,107,308,133"/>
+<area shape="rect" id="node5" href="$class_device.html#a7defee2e9d91cf17d10faa5cd70be42b" title="Returns the total column count of the device. " alt="" coords="165,158,299,199"/>
+</map>

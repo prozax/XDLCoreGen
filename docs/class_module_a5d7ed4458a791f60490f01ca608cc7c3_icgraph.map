@@ -1,0 +1,8 @@
+<map id="Module::add_port" name="Module::add_port">
+<area shape="rect" id="node2" href="$class_module.html#a8d9a75fb8495fc4a487bfe708b44a1e1" title="Module::add_ground\l_connection" alt="" coords="201,5,340,47"/>
+<area shape="rect" id="node4" href="$class_multiplier.html#ae0563393a114964de7a08d61477f555c" title="Multiplier::Multiplier" alt="" coords="607,122,741,149"/>
+<area shape="rect" id="node5" href="$class_module.html#ad1d594b680df9ae5d6bf94b85c855b2d" title="Module::add_vcc_connection" alt="" coords="176,71,365,98"/>
+<area shape="rect" id="node6" href="$class_module.html#a8ad6c49ff4e8a3c7acc5105765699417" title="Module::add_port" alt="" coords="209,173,332,199"/>
+<area shape="rect" id="node7" href="$class_multiplier.html#af0fb0d723b5ef547a90de83aa0da1065" title="Multiplier::add_ports" alt="" coords="417,198,555,225"/>
+<area shape="rect" id="node3" href="$class_multiplier.html#a27ec67e0c7955e187acf1889ad26a18a" title="Multiplier::create_row" alt="" coords="413,71,559,98"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="Multiplier::Multiplier" name="Multiplier::Multiplier">
+<area shape="rect" id="node2" href="$class_multiplier.html#a27ec67e0c7955e187acf1889ad26a18a" title="Creates a new row of the multiplier and configures the slices. " alt="" coords="197,241,342,268"/>
+<area shape="rect" id="node7" href="$class_module.html#a5d7ed4458a791f60490f01ca608cc7c3" title="Adds a new port to the module. " alt="" coords="642,36,765,62"/>
+<area shape="rect" id="node8" href="$class_module.html#a0ddd931db99b99364cf8a195c1d10cee" title="Creates a new net if it doesn&#39;t exist yet and returns a pointer to it. " alt="" coords="408,346,579,373"/>
+<area shape="rect" id="node9" href="$class_net.html#ad4bddb4f342c872a74e8657ac6783d86" title="Creates an inpin in the net. " alt="" coords="441,397,546,424"/>
+<area shape="rect" id="node12" href="$class_multiplier.html#a54415c1c8cc5379adb6ac1b992e09414" title="Connects a row to the previous one. " alt="" coords="188,296,351,322"/>
+<area shape="rect" id="node13" href="$class_multiplier.html#af0fb0d723b5ef547a90de83aa0da1065" title="Creates a port for every net that begins with &quot;input_&quot; or &quot;output_&quot;. " alt="" coords="200,100,339,126"/>
+<area shape="rect" id="node3" href="$class_multiplier.html#ae494c289e5d99b9796b1fc6bd4f222c0" title="Creates a configured Slicel instance for the given position. " alt="" coords="434,230,553,271"/>
+<area shape="rect" id="node4" href="$class_slicel.html#a92741cb0912d5db50c00ea66f44ea54a" title="Sets an attribute in the slicel. " alt="" coords="636,208,771,234"/>
+<area shape="rect" id="node6" href="$class_module.html#a8d9a75fb8495fc4a487bfe708b44a1e1" title="Adds a pin to the ground (LOGIC 0) net and creates a port for gnd. " alt="" coords="424,112,563,154"/>
+<area shape="rect" id="node10" href="$class_module.html#ad1d594b680df9ae5d6bf94b85c855b2d" title="Adds a pin to the vcc (LOGIC 1) net and creates a port for vcc. " alt="" coords="399,61,588,88"/>
+<area shape="rect" id="node11" href="$class_net.html#a8377cfbdb352d0d410cbc26fd277f919" title="Sets the outpin of the net. " alt="" coords="438,296,549,322"/>
+<area shape="rect" id="node5" href="$class_quarter_slicel.html#a7ac84ea683a69ccc25461154873e1a86" title="Sets the value of an attribute or adds it if it doesn&#39;t exist yet. " alt="" coords="819,200,941,242"/>
+</map>
