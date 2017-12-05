@@ -245,6 +245,7 @@ This creates a pipelined mutliplier with 32x32 inputs using the device described
 
 ## Limitations
 This framework currently only supports the creation of hard macros. This means a design must contain a single module with ports and no further nets or instances.
+Only Slicels are fully implemented currently since this framework is designed for combinational logic designs.
 
 ## Credits
 * Martin Kumm, Shahid Abbas and Peter Zipf: An Efficient Softcore Multiplier Architecture for Xilinx FPGAs In: 22nd IEEE Symposium on Computer Arithmetic (ARITH 22), 2015 ([preprint](http://www.uni-kassel.de/eecs/fileadmin/datas/fb16/Fachgebiete/Digitaltechnik/preprints/2015_ARITH_kumm.pdf), copyright IEEE, http://dx.doi.org/10.1109/ARITH.2015.17)

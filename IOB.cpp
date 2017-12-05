@@ -2,7 +2,7 @@
 #include "IOB.h"
 
 /*!
- * Constructor that creates an unplaced IOB instance.
+ * @brief Constructor that creates an unplaced IOB instance.
  *
  * @param name Name of the instance.
  */
@@ -66,7 +66,7 @@ std::ostream &operator<<(std::ostream &os, IOB const &rhs) {
 }
 
 /*!
- * Returns placing status of the instance.
+ * @brief Returns placing status of the instance.
  *
  * @return True if placed, false if unplaced.
  */
@@ -75,7 +75,7 @@ bool IOB::is_placed()const {
 }
 
 /*!
- * Sets an attribute or adds it if it doesn't exist.
+ * @brief Sets an attribute or adds it if it doesn't exist.
  *
  * @param attr Attribute name.
  * @param val Attribute value.

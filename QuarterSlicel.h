@@ -5,6 +5,9 @@
 #include <map>
 #include <sstream>
 
+/*!
+ * This class groups LUTs and registers of a Slicel together which exist in four exact copies in each Slicel.
+ */
 class QuarterSlicel {
 private:
     std::string _name; /**< Name of this quarter slice. */

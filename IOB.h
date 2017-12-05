@@ -15,7 +15,7 @@ protected:
     PrimitiveSite* _primitive_site; /**< pointer to the primitive site the instance is placed on. */
 
 public:
-    IOB(const std::string &_name);
+    explicit IOB(const std::string &_name);
     friend std::ostream& operator<<(std::ostream& os, IOB const& rhs);
     bool is_placed()const;
     void set_attribute(std::string attr, std::string val);

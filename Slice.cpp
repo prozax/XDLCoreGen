@@ -1,7 +1,7 @@
 #include "Slice.h"
 
 /*!
- * Constructor for an unplaced Slice.
+ * @brief Constructor for an unplaced Slice.
  *
  * @param name Name of the slice.
  */
@@ -36,7 +36,7 @@ bool Slice::is_placed() const {
  * @param placed New placement status of the slice.
  */
 void Slice::set_placed(bool placed) {
-    Slice::_placed = placed;
+    _placed = placed;
 }
 
 /*!
@@ -48,11 +48,19 @@ PrimitiveSite *Slice::get_primitive_site() const {
 }
 
 /*!
+ * @brief Sets the PrimitiveSite of the slice and updates the placed status.
  *
  * @param primitive_site Pointer to the new PrimitiveSite the Slice is placed on.
  */
 void Slice::set_primitive_site(PrimitiveSite *primitive_site) {
-    Slice::_primitive_site = primitive_site;
+    _primitive_site = primitive_site;
+
+    if(_primitive_site == nullptr) {
+        _placed = false;
+    }
+    else {
+        _placed = true;
+    }
 }
 
 std::ostream &operator<<(std::ostream &os, Slice const &rhs) {

@@ -9,15 +9,16 @@
 #include <list>
 #include "PrimitiveSite.h"
 
-//class PrimitiveSite;
-
+/*!
+ *  This class describes an FPGA
+ */
 class Tile {
 protected:
     std::vector<PrimitiveSite*> _primitive_sites; /**< Primitve sites on this tile. */
     std::string _name; /**< Name of the tile. */
     std::string _type; /**< Type of the tile. */
-    int _row; /**< Row of this tile. */
-    int _column; /**< Column of this tile. */
+    int _row; /**< Physical Row of this tile. */
+    int _column; /**< Physical Column of this tile. */
     int _pos_x; /**< X position of this tile. */
     int _pos_y; /**< Y position of this tile. */
 

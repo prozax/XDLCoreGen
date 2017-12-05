@@ -8,6 +8,9 @@
 #include "Module.h"
 #include "Device.h"
 
+/*!
+ *
+ */
 class Design {
 protected:
     std::string _name; /**< Design name. */

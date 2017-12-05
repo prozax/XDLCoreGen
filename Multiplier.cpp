@@ -270,7 +270,6 @@ void Multiplier::place(int x_offset, int y_offset, Device &device) {
 
         for (int y = 0; y < slice_count; ++y) {
             _slices.at(pos).set_primitive_site(device.get_slice(x + x_offset, y + y_offset));
-            _slices.at(pos).set_placed(true);
             pos++;
         }
     }

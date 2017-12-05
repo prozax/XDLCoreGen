@@ -4,7 +4,7 @@
 #include <utility>
 
 /*!
- * Constructor with instance name and pin name.
+ * @brief Constructor with instance name and pin name.
  *
  * @param portname Name of the port.
  * @param ps_name Name of the instance of the PrimitiveSite the port is connected to.

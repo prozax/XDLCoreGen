@@ -11,6 +11,9 @@
 #include "Tile.h"
 #include "PrimitiveSite.h"
 
+/*!
+ * This class reads XDL hardware report files and provides all necessary data to place a Design.
+ */
 class Device {
 protected:
     std::string _name; /**< Device name. */
@@ -23,7 +26,7 @@ protected:
     std::map<std::tuple<int, int>, PrimitiveSite*> _slices; /**< Map of primitive sites on the device.*/
 
 public:
-    Device(std::string);
+    explicit Device(std::string);
     friend std::ostream& operator<<(std::ostream& os, Device const& rhs);
     const std::string &get_name() const;
     int get_column_count() const;

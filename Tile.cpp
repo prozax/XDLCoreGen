@@ -2,7 +2,7 @@
 #include "Tile.h"
 
 /*!
- * Constructor with all attributes.
+ * @brief Constructor with all attributes.
  *
  * @param name Name of the tile.
  * @param type Type of the tile.
@@ -40,7 +40,7 @@ std::vector<PrimitiveSite*> &Tile::get_primitive_sites() {
 }
 
 /*!
- * Adds a PrimitiveSite to the tile.
+ * @brief Adds a PrimitiveSite to the tile.
  *
  * @param p Pointer to a PrimitiveSite.
  */

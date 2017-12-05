@@ -10,11 +10,15 @@
 #include "Port.h"
 #include "Device.h"
 #include "IOB.h"
-#include <math.h>
+#include <cmath>
 #include <sstream>
 #include <deque>
 #include <iostream>
 
+
+/*!
+ * The Module class contains Slicels, Nets and Ports for hard macros.
+ */
 class Module {
 protected:
     std::string _name; /**< Name of the module. */
@@ -26,7 +30,8 @@ protected:
 
 public:
     Module();
-    Module(std::string);
+
+    explicit Module(std::string);
 
     void add_slice(Slicel);
     std::deque<Slicel> &get_slices();

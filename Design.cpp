@@ -1,7 +1,7 @@
 
 #include "Design.h"
 /*!
- * Constructor for custom naming.
+ * @brief Constructor for custom name.
  *
  * @param name Name of the design.
  * @param device Device instance to place the design onto.
@@ -13,14 +13,14 @@ Design::Design(const std::string &name, Device &device): _name(name), _device(de
 }
 
 /*!
- * Constructor for hard macros.
+ * @brief Constructor for hard macros.
  *
  * @param device Device instance to place the design onto.
  */
 Design::Design(Device & device): Design("__XILINX_NMC_MACRO", device) {}
 
 /*!
- * Adds a Module instance to this design.
+ * @brief Adds a Module instance to this design.
  *
  * @param m Module instance to be added to the design.
  */
@@ -55,7 +55,7 @@ std::ostream &operator<<(std::ostream &os, Design const &rhs) {
 }
 
 /*!
- * Calls the place method of every Module in the design.
+ * @brief Calls the place method of every Module in the design.
  *
  * @param x_offset X position offset on the Device for the design.
  * @param y_offset Y position offset on the Device for the design.
@@ -67,7 +67,7 @@ void Design::place(int x_offset, int y_offset) {
 }
 
 /*!
- * Sets the value of a design property or adds it if it doesn't exist.
+ * @brief Sets the value of a design property or adds it if it doesn't exist.
  *
  * @param prop Property name.
  * @param value Property Value

@@ -1,7 +1,7 @@
 #include "Slicel.h"
 
 /*!
- * Creates an unplaced Slicel instance with four QuarterSlicel instances called A, B, C and D.
+ * @brief Creates an unplaced Slicel instance with four QuarterSlicel instances called A, B, C and D.
  *
  * @param name Name of the slice.
  */
@@ -37,7 +37,9 @@ std::ostream &operator<<(std::ostream &os, Slicel const &rhs) {
 }
 
 /*!
- * Sets an attribute in the slicel. If the attribute is not found in the slicel it will be set in the
+ * @brief Sets an attribute in the slicel.
+ *
+ * If the attribute is not found in the slicel it will be set in the
  * QuarterSlicel according to the first letter of the attribute name. If the first letter doesn't
  * correspond to a QuarterSlicel or doesn't exist in the QuarterSlicel it will be ignored.
  *

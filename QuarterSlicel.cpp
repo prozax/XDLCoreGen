@@ -1,7 +1,7 @@
 #include "QuarterSlicel.h"
 
 /*!
- * Constructor creating a QuarterSlice with all features deactivated.
+ * @brief Constructor creating a QuarterSlice with all features deactivated.
  *
  * @param name Name of the quarter slice.
  */
@@ -40,7 +40,7 @@ void QuarterSlicel::set_name(const std::string &name) {
 }
 
 /*!
- * Sets the value of an attribute or adds it if it doesn't exist yet.
+ * @brief Sets the value of an attribute or adds it if it doesn't exist yet.
  *
  * @param attr Name of the attribute.
  * @param val New attribute value.
@@ -55,7 +55,7 @@ void QuarterSlicel::set_attribute(const std::string attr, const std::string val)
 }
 
 /*!
- * Returns the value of the requestet attribute or an empty string if the attribute doesn't exist.
+ * @brief Returns the value of the requestet attribute or an empty string if the attribute doesn't exist.
  *
  * @param attr Name of the attribute.
  * @return Value of the attribute.

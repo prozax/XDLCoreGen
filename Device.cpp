@@ -6,7 +6,7 @@
 #include "Device.h"
 
 /*!
- * This constructor takes a file path and parses the file for the device name and all primitive sites
+ * @brief This constructor takes a file path and parses the file for the device name and all primitive sites
  * on the device.
  *
  * @return Path to a device report file.
@@ -88,7 +88,7 @@ std::ostream &operator<<(std::ostream &os, Device const &rhs) {
 }
 
 /*!
- * Returns the device name.
+ * @brief Returns the device name.
  *
  * @return Device name.
  */
@@ -97,7 +97,7 @@ const std::string &Device::get_name() const {
 }
 
 /*!
- * Returns the total column count of the device.
+ * @brief Returns the total column count of the device.
  *
  * @return Column count.
  */
@@ -106,7 +106,7 @@ int Device::get_column_count() const {
 }
 
 /*!
- * Returns the total row count of the device.
+ * @brief Returns the total row count of the device.
  *
  * @return Row count.
  */
@@ -115,7 +115,7 @@ int Device::get_row_count() const {
 }
 
 /*!
- * Returns a map of all tiles.
+ * @brief Returns a map of all tiles.
  *
  * @return Map of tiles.
  */
@@ -125,7 +125,7 @@ const std::map<std::tuple<int, int>, Tile> &Device::get_tiles() const {
 }
 
 /*!
- * Returns a pointer to the slice at the given coordinates or nullptr if it doesn't exist.
+ * @brief Returns a pointer to the slice at the given coordinates or nullptr if it doesn't exist.
  *
  * @param x X coordinate of the slice.
  * @param y Y coordinate of the slice.
@@ -140,7 +140,7 @@ PrimitiveSite* Device::get_slice(int x, int y) {
 }
 
 /*!
- * Returns the number of rows that contain slices on the device.
+ * @brief Returns the number of rows that contain slices on the device.
  *
  * @return Number of rows that contain slices of this device.
  */
@@ -149,7 +149,7 @@ int Device::get_slice_row_count() const {
 }
 
 /*!
- * Returns the number of columns that contain slices on the device.
+ * @brief Returns the number of columns that contain slices on the device.
  *
  * @return Number of columns that contain slices of this device.
  */

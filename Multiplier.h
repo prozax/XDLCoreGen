@@ -6,6 +6,10 @@
 #include "Module.h"
 #include "Device.h"
 
+/*!
+ * This class creates a pipelined or combinatorial multiplier hard macro with customizable input word lengths
+ * and provides a custom placing algorithm.
+ */
 class Multiplier: public Module {
 protected:
     int _row_count; /**< Number of rows the multiplier useses. */
