@@ -175,6 +175,10 @@ void Module::place(int x_offset, int y_offset, Device &device) {
  * @param s Slicel instance to be added to the module.
  */
 void Module::add_slice(Slicel s) {
+    if(_slices.empty()) {
+        _inst_name = s.get_name();
+    }
+    
     _slices.push_back(s);
 }
 
